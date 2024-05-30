@@ -15,4 +15,18 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Rooms\Application\Internal\CommandServices\" />
+      <Folder Include="Rooms\Application\Internal\QueryServices\" />
+      <Folder Include="Rooms\Domain\Model\Aggregates\" />
+      <Folder Include="Rooms\Domain\Model\Commands\" />
+      <Folder Include="Rooms\Domain\Model\Queries\" />
+      <Folder Include="Rooms\Domain\Model\Repositories\" />
+      <Folder Include="Rooms\Domain\Model\Services\" />
+      <Folder Include="Rooms\Infrastructure\Persistence\EFC\" />
+      <Folder Include="Rooms\Interfaces\ACL\Services\" />
+      <Folder Include="Rooms\Interfaces\REST\Resources\" />
+      <Folder Include="Rooms\Interfaces\REST\Transform\" />
+    </ItemGroup>
+
 </Project>
