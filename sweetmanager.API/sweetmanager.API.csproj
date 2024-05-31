@@ -16,11 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="interaction\Application\Internal\CommandServices\" />
-      <Folder Include="interaction\Application\Internal\QueryServices\" />
-      <Folder Include="interaction\Domain\Model\Queries\" />
-      <Folder Include="interaction\Domain\Services\" />
-      <Folder Include="interaction\Interfaces\REST\" />
+      <Folder Include="communication\Application\Internal\CommandServices\" />
+      <Folder Include="communication\Application\Internal\QueryServices\" />
+      <Folder Include="communication\Interfaces\REST\" />
     </ItemGroup>
 
 </Project>

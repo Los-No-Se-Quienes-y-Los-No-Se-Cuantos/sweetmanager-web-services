@@ -1,3 +1,3 @@
-namespace sweetmanager.API.interaction.Domain.Model.Commands;
+namespace sweetmanager.API.communication.Domain.Model.Commands;
 
 public record CreateNotificationCommand(string title, string message);

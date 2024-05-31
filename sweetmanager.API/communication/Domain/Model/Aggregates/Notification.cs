@@ -1,6 +1,6 @@
-using sweetmanager.API.interaction.Domain.Model.Commands;
+using sweetmanager.API.communication.Domain.Model.Commands;
 
-namespace sweetmanager.API.interaction.Domain.Model.Aggregates;
+namespace sweetmanager.API.communication.Domain.Model.Aggregates;
 
 public class Notification
 {
