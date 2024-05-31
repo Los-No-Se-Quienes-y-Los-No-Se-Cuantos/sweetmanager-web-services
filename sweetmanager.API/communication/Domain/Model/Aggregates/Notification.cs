@@ -2,7 +2,7 @@ using sweetmanager.API.communication.Domain.Model.Commands;
 
 namespace sweetmanager.API.communication.Domain.Model.Aggregates;
 
-public class Notification
+public partial class Notification 
 {
     public int Id { get; private set; }
     
@@ -10,20 +10,17 @@ public class Notification
     
     public string Message { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
-    
     protected Notification()
     {
         this.Title = string.Empty;
         this.Message = string.Empty;
-        this.CreatedAt = DateTime.Now;
     }
     
     public Notification(CreateNotificationCommand command)
     {
         this.Title = command.title;
         this.Message = command.message;
-        this.CreatedAt = DateTime.Now;
     }
-    
+
+    public DateTimeOffset? UpdatedDate { get; set; }
 }
