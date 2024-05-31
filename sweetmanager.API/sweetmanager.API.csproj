@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Subscriptions\Interfaces\" />
+      <Folder Include="Subscriptions\Interfaces\REST\Transform\" />
     </ItemGroup>
 
 </Project>
