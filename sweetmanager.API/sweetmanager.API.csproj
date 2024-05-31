@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="communication\Application\Internal\QueryServices\" />
       <Folder Include="communication\Interfaces\REST\" />
     </ItemGroup>
 
