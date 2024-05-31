@@ -11,16 +11,5 @@ public class NotificationRepository : BaseRepository<Notification>, INotificatio
     public NotificationRepository(AppDbContext context) : base(context)
     {
     }
-
-    public async Task<IEnumerable<Notification>> FindAllAsync()
-    {
-        return await Context.Set<Notification>().ToListAsync();
-    }
-
-    public async Task<Notification> CreateNotificationAsync(Notification newNotification)
-    {
-        await Context.Set<Notification>().AddAsync(newNotification);
-        
-        return newNotification;
-    }
+    
 }

@@ -5,7 +5,5 @@ namespace sweetmanager.API.communication.Domain.Repositories;
 
 public interface INotificationRepository : IBaseRepository<Notification>
 {
-    Task<IEnumerable<Notification>> FindAllAsync();
     
-    Task<Notification> CreateNotificationAsync(Notification newNotification);
 }
