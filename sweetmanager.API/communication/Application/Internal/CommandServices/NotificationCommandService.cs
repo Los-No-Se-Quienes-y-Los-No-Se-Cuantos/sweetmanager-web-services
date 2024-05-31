@@ -8,8 +8,14 @@ namespace sweetmanager.API.communication.Application.Internal.CommandServices;
 
 public class NotificationCommandService(INotificationRepository notificationRepository, IUnitOfWork unitOfWork) : INotificationCommandService
 {
-    public Task<Notification> Handle(CreateNotificationCommand command)
+    public async Task<Notification> Handle(CreateNotificationCommand command)
     {
-        throw new NotImplementedException();
+        var notification = new Notification(command);
+        
+        await notificationRepository.AddAsync(new Notification(command));
+
+        await unitOfWork.CompleteAsync();
+
+        return notification;
     }
 }
