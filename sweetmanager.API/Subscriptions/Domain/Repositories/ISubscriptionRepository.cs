@@ -5,5 +5,5 @@ namespace sweetmanager.API.Subscriptions.Domain.Repositories;
 
 public interface ISubscriptionRepository: IBaseRepository<Subscription>
 {
-    
+    Task<Subscription> FindByTitleAsync(String title);
 }

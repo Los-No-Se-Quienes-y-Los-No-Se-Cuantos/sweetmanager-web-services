@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Subscriptions\Application\" />
       <Folder Include="Subscriptions\Interfaces\" />
     </ItemGroup>
 
