@@ -19,7 +19,6 @@
       <Folder Include="Rooms\Application\Internal\CommandServices\" />
       <Folder Include="Rooms\Application\Internal\QueryServices\" />
       <Folder Include="Rooms\Domain\Model\Aggregates\" />
-      <Folder Include="Rooms\Domain\Model\Queries\" />
       <Folder Include="Rooms\Domain\Model\Repositories\" />
       <Folder Include="Rooms\Domain\Model\Services\" />
       <Folder Include="Rooms\Infrastructure\Persistence\EFC\" />
