@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="communication\Interfaces\REST\" />
+      <Folder Include="communication\Interfaces\REST\Transform\" />
     </ItemGroup>
 
 </Project>
