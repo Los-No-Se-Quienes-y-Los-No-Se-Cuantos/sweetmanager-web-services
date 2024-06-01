@@ -10,17 +10,16 @@ public partial class Notification
     
     public string Message { get; private set; }
     
-    protected Notification()
+    public Notification(string title, string message)
     {
-        this.Title = string.Empty;
-        this.Message = string.Empty;
+        Title = title;
+        Message = message;
     }
     
     public Notification(CreateNotificationCommand command)
     {
-        this.Title = command.title;
-        this.Message = command.message;
+        Title = command.Title;
+        Message = command.Message;
     }
-
-    public DateTimeOffset? UpdatedDate { get; set; }
+    
 }
