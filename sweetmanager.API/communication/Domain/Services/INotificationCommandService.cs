@@ -5,5 +5,5 @@ namespace sweetmanager.API.communication.Domain.Services;
 
 public interface INotificationCommandService
 {
-    Task<Notification> Handle(CreateNotificationCommand command);
+    Task<Notification?> Handle(CreateNotificationCommand command);
 }
