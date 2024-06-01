@@ -6,10 +6,10 @@ using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 namespace sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
 
-public class NotificationRepository : BaseRepository<Notification>, INotificationRepository
+public class NotificationRepository(AppDbContext context) : BaseRepository<Notification>(context), INotificationRepository
 {
-    public NotificationRepository(AppDbContext context) : base(context)
+    public Task<Notification?> FindNotificationByIdAsync(int id)
     {
+        return Context.Set<Notification>().FirstOrDefaultAsync(x => x.Id == id);
     }
-    
 }
