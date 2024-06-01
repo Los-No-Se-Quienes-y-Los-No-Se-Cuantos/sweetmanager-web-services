@@ -1,3 +1,3 @@
 ﻿namespace sweetmanager.API.communication.Interfaces.REST.Resources;
 
-public record CreateNotificationResource();
+public record CreateNotificationResource(string Title, string Message);
