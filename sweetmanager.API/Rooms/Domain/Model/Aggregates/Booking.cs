@@ -21,8 +21,8 @@ public partial class Booking
         TotalPrice = 0;
         State = string.Empty;
     }
-    public Booking(int clientId, int bedroomId, DateTime startDate, DateTime finalDate,
-        float totalPrice, string state)
+    public Booking(int clientId, int bedroomId, DateTime startDate,
+        DateTime finalDate, float totalPrice, string state)
     {
         ClientId = clientId;
         BedroomId = bedroomId;
