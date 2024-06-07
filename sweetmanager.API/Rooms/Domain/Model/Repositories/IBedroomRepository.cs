@@ -5,5 +5,5 @@ namespace sweetmanager.API.Rooms.Domain.Model.Repositories;
 
 public interface IBedroomRepository : IBaseRepository<Bedroom>
 {
-    Task<Bedroom> FindBedroomByStateAsync(string state);
+    Task<IEnumerable<Bedroom>> FindBedroomByStateAsync(string state);
 }

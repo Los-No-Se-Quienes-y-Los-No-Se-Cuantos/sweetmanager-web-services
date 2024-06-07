@@ -40,4 +40,9 @@ public partial class Booking
         TotalPrice = command.TotalPrice;
         State = command.State;
     }
+
+    public Booking(UpdateBookingCommand command)
+    {
+        this.ClientId = command.ClientId;
+    }
 }

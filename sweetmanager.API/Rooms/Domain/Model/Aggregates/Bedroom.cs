@@ -36,4 +36,13 @@ public partial class Bedroom
         TotalTelevision = command.TotalTelevision;
         State = command.State;
     }
+
+    public Bedroom(UpdateBedroomCommand command)
+    {
+        TypeBedroomId = command.TypeBedroomId;
+        TotalBed = command.TotalBeds;
+        TotalBathroom = command.TotalBathroom;
+        TotalTelevision = command.TotalTelevision;
+        State = command.State;
+    }
 }

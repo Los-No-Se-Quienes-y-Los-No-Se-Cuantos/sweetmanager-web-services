@@ -5,6 +5,6 @@ namespace sweetmanager.API.Rooms.Domain.Model.Services;
 
 public interface IBookingQueryService
 {
-    Task<Booking> Handle(GetAllBookingsQuery query);
-    Task<Booking> Handle(GetBookingByIdQuery query);
+    Task<IEnumerable<Booking>> Handle(GetAllBookingsQuery query);
+    Task<Booking?> Handle(GetBookingByIdQuery query);
 }

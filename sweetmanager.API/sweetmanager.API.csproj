@@ -16,8 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Rooms\Application\Internal\CommandServices\" />
-      <Folder Include="Rooms\Application\Internal\QueryServices\" />
       <Folder Include="Rooms\Infrastructure\Persistence\EFC\" />
       <Folder Include="Rooms\Interfaces\ACL\Services\" />
       <Folder Include="Rooms\Interfaces\REST\Resources\" />
