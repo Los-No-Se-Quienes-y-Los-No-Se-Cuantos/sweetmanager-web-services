@@ -31,7 +31,7 @@ public partial class Bedroom
     public Bedroom(CreateBedroomCommand command)
     {
         TypeBedroomId = command.TypeBedroomId;
-        TotalBed = command.TotalBeds;
+        TotalBed = command.TotalBed;
         TotalBathroom = command.TotalBathroom;
         TotalTelevision = command.TotalTelevision;
         State = command.State;
@@ -40,7 +40,7 @@ public partial class Bedroom
     public Bedroom(UpdateBedroomCommand command)
     {
         TypeBedroomId = command.TypeBedroomId;
-        TotalBed = command.TotalBeds;
+        TotalBed = command.TotalBed;
         TotalBathroom = command.TotalBathroom;
         TotalTelevision = command.TotalTelevision;
         State = command.State;
