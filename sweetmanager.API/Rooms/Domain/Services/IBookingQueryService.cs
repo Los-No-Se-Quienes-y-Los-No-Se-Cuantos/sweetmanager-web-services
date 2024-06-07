@@ -1,7 +1,7 @@
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Rooms.Domain.Model.Queries;
 
-namespace sweetmanager.API.Rooms.Domain.Model.Services;
+namespace sweetmanager.API.Rooms.Domain.Services;
 
 public interface IBookingQueryService
 {

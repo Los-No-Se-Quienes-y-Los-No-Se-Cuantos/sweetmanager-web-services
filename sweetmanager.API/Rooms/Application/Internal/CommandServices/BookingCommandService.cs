@@ -1,7 +1,7 @@
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Rooms.Domain.Model.Commands;
-using sweetmanager.API.Rooms.Domain.Model.Repositories;
-using sweetmanager.API.Rooms.Domain.Model.Services;
+using sweetmanager.API.Rooms.Domain.Repositories;
+using sweetmanager.API.Rooms.Domain.Services;
 using sweetmanager.API.Shared.Domain.Repositories;
 
 namespace sweetmanager.API.Rooms.Application.Internal.CommandServices;
