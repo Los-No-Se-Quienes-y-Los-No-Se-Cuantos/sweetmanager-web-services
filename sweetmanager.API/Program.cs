@@ -1,4 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.communication.Application.Internal.CommandServices;
+using sweetmanager.API.communication.Application.Internal.QueryServices;
+using sweetmanager.API.communication.Domain.Repositories;
+using sweetmanager.API.communication.Domain.Services;
+using sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -38,6 +43,12 @@ builder.Services.AddSwaggerGen();
 
 // Shared Bounded Context Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
+
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
+
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 var app = builder.Build();
 
