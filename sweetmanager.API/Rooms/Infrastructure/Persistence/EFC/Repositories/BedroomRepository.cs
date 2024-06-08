@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Rooms.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -10,6 +11,6 @@ public class BedroomRepository(AppDbContext context) : BaseRepository<Bedroom>(c
 {
     public async Task<IEnumerable<Bedroom>> FindBedroomByStateAsync(string state)
     {
-        return await Context.Set<Bedroom>().Where(b => b.State == state).ToListAsync();
+        return await Context.Set<Bedroom>().Where(b => b.BedroomStatus.GetDisplayName() == state).ToListAsync();
     }
 }

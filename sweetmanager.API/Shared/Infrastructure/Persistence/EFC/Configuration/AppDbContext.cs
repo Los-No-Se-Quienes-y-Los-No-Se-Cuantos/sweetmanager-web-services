@@ -21,31 +21,46 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Bedroom>(entity =>
         {
             entity.HasKey(e => e.Id);
-
-            entity.Property(e => e.State)
+            
+            entity.OwnsOne(e => e.Information, i =>
+            {
+                i.WithOwner().HasForeignKey("Id");
+                i.Property(b => b.TotalBathroom).HasColumnName("TotalBathroom");
+                i.Property(b => b.TotalBed).HasColumnName("TotalBed");
+                i.Property(b => b.TotalTelevision).HasColumnName("TotalTelevision");
+            });
+            
+            entity.Property(e => e.BedroomStatus)
+                .HasColumnName("state")
                 .IsRequired()
                 .HasMaxLength(50);
-
-            /*entity.HasOne<TypeBedroom>()
-                .WithMany()
-                .HasForeignKey(e => e.TypeBedroomId);*/
         });
 
         builder.Entity<Booking>(entity =>
         {
             entity.HasKey(e => e.Id);
-
-            entity.Property(e => e.State)
-                .IsRequired()
-                .HasMaxLength(50);
+            
+            entity.HasOne<Bedroom>()
+                .WithMany()
+                .HasForeignKey(e => e.BedroomId);
+            
+            entity.OwnsOne(e => e.Detail, i =>
+            {
+                i.WithOwner().HasForeignKey("Id");
+                i.Property(d => d.StartDate).HasColumnName("StartDate");
+                i.Property(d => d.FinalDate).HasColumnName("FinalDate");
+                i.Property(d => d.Discount).HasColumnName("Discount");
+                i.Property(d => d.TotalPrice).HasColumnName("TotalPrice");
+            });
 
             /*entity.HasOne<Client>()
                 .WithMany()
                 .HasForeignKey(e => e.ClientId);*/
-
-            entity.HasOne<Bedroom>()
-                .WithMany()
-                .HasForeignKey(e => e.BedroomId);
+            
+            entity.Property(e => e.BookingStatus)
+                .HasColumnName("state")
+                .IsRequired()
+                .HasMaxLength(50);
         });
         
         /*
