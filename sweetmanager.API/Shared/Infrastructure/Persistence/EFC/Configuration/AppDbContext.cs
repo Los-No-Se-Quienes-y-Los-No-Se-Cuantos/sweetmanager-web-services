@@ -1,5 +1,6 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -16,6 +17,37 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
+        builder.Entity<Bedroom>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.State)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            /*entity.HasOne<TypeBedroom>()
+                .WithMany()
+                .HasForeignKey(e => e.TypeBedroomId);*/
+        });
+
+        builder.Entity<Booking>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.State)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            /*entity.HasOne<Client>()
+                .WithMany()
+                .HasForeignKey(e => e.ClientId);*/
+
+            entity.HasOne<Bedroom>()
+                .WithMany()
+                .HasForeignKey(e => e.BedroomId);
+        });
+        
         /*
         // Place here your entities configuration
 
