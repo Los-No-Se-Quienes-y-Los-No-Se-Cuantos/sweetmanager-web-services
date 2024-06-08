@@ -1,4 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.Clients.Application.Internal.CommandServices;
+using sweetmanager.API.Clients.Application.Internal.QueryServices;
+using sweetmanager.API.Clients.Domain.Repositories;
+using sweetmanager.API.Clients.Domain.Services;
+using sweetmanager.API.Clients.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Clients.Interfaces.ACL;
+using sweetmanager.API.Clients.Interfaces.ACL.Services;
 using sweetmanager.API.Rooms.Application.Internal.CommandServices;
 using sweetmanager.API.Rooms.Application.Internal.QueryServices;
 using sweetmanager.API.Rooms.Domain.Repositories;
@@ -11,6 +18,7 @@ using sweetmanager.API.Communication.Domain.Services;
 using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Infrastructure.Socket;
 using sweetmanager.API.Payments.Application.Internal.CommandService;
+using sweetmanager.API.Payments.Application.Internal.OutboundServices.ACL;
 using sweetmanager.API.Payments.Application.Internal.QueryService;
 using sweetmanager.API.Payments.Domain.Repositories;
 using sweetmanager.API.Payments.Domain.Services;
@@ -97,6 +105,13 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IPaymentCommandService, PaymentCommandService>();
 builder.Services.AddScoped<IPaymentQueryService, PaymentQueryService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<ExternalProfileService>();
+
+// Client Bounded Context Injection Configuration
+builder.Services.AddScoped<IClientCommandService, ClientCommandService>();
+builder.Services.AddScoped<IClientQueryService, ClientQueryService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClientsContextFacade, ClientsContextFacade>();
 
 var app = builder.Build();
 
