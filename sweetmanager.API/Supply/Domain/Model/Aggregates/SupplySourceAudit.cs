@@ -5,7 +5,5 @@ namespace sweetmanager.API.Supply.Domain.Model.Aggregates;
 
 public partial class SupplySource : IEntityWithCreatedUpdatedDate
 {
-        [Column("CreatedAt")] public DateTimeOffset? CreatedDate { get; set; }
-        
-        public DateTimeOffset? UpdatedDate { get; set; }
+        [Column("CreatedAt")] public DateTimeOffset? CreatedDate { get; set; }        
 }
