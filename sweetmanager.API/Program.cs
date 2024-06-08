@@ -10,6 +10,11 @@ using sweetmanager.API.Communication.Domain.Repositories;
 using sweetmanager.API.Communication.Domain.Services;
 using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Infrastructure.Socket;
+using sweetmanager.API.Payments.Application.Internal.CommandService;
+using sweetmanager.API.Payments.Application.Internal.QueryService;
+using sweetmanager.API.Payments.Domain.Repositories;
+using sweetmanager.API.Payments.Domain.Services;
+using sweetmanager.API.Payments.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -87,6 +92,11 @@ builder.Services.AddScoped<IWebSocketHandler, WebSocketHandler>();
 builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
 builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
+// Payment Bounded Context Injection Configuration
+builder.Services.AddScoped<IPaymentCommandService, PaymentCommandService>();
+builder.Services.AddScoped<IPaymentQueryService, PaymentQueryService>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 var app = builder.Build();
 
