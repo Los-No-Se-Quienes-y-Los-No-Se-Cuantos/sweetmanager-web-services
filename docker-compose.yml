@@ -1,16 +1,13 @@
 ﻿services:
   sweet-manager.api:
-    image: sweet-manager.api
+    image: ryzeon/sweet-manager.api:latest
     ports:
-      - "8563:8563"
-    expose:
-      - "8563"
+      - "5000:5000"
     build:
       context: .
       dockerfile: sweetmanager.API/Dockerfile
     environment:
       SweetManagerDbConnection: Server=sweet-manager_mysql;Database=sweetmanager;User=root;Password=securepassword123
-      ASPNETCORE_URLS: http://+:8563
     restart: always
     depends_on:
       sweet-manager_mysql:
@@ -27,4 +24,4 @@
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 10s
-      retries: 10we
+      retries: 10

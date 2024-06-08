@@ -3,7 +3,10 @@
 # Set environment variables and work directory
 WORKDIR /app
 
-EXPOSE 8563
+EXPOSE 5000
+
+ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Check if the user with the specified ID already exists, and if not, create a new user
 RUN if ! id -u $APP_UID > /dev/null 2>&1; then adduser --disabled-password --gecos '' --uid $APP_UID appuser; fi
