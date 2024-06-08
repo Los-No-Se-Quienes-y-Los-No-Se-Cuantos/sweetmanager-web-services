@@ -19,6 +19,11 @@ using sweetmanager.API.Subscriptions.Application.Internal.QueryServices;
 using sweetmanager.API.Subscriptions.Domain.Repositories;
 using sweetmanager.API.Subscriptions.Domain.Services;
 using sweetmanager.API.Subscriptions.Infrastructure.Persistence.EFC;
+using sweetmanager.API.Supply.Application.Internal.CommandServices;
+using sweetmanager.API.Supply.Application.Internal.QueryServices;
+using sweetmanager.API.Supply.Domain.Repositories;
+using sweetmanager.API.Supply.Domain.Services;
+using sweetmanager.API.Supply.Infrastructure.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +66,11 @@ builder.Services.AddScoped<IBedroomQueryService, BedroomQueryService>();
 builder.Services.AddScoped<IBookingQueryService, BookingQueryService>();
 builder.Services.AddScoped<IBedroomRepository, BedroomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+// Supply Bounded Context Injection Configuration
+builder.Services.AddScoped<ISupplyCommandService, SupplyCommandService>();
+builder.Services.AddScoped<ISupplyQueryService, SupplyQueryService>();
+builder.Services.AddScoped<ISupplyRepository, SupplyRepository>();
 
 // Shared Bounded Context Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
