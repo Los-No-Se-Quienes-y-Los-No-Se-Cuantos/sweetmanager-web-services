@@ -1,10 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
+using sweetmanager.API.Communication.Infrastructure.Socket;
 
 namespace sweetmanager.API.communication.Interfaces.SOCKET;
 
-public class WebSocketHandler
+public class WebSocketHandler : IWebSocketHandler
 {
     private static readonly ConcurrentDictionary<string, List<WebSocket>> _rooms = new();
 
