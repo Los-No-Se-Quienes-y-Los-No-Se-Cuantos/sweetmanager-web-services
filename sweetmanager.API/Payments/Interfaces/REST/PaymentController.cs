@@ -38,6 +38,7 @@ public class PaymentController(IPaymentCommandService commandService, IPaymentQu
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<PaymentResource>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllPaymentsFromQuery([FromQuery] string email)
     {
         if (string.IsNullOrEmpty(email)) return await GetAllPayments();
@@ -45,6 +46,7 @@ public class PaymentController(IPaymentCommandService commandService, IPaymentQu
     }
     
     [HttpGet("{paymentId:int}")]
+    [ProducesResponseType(typeof(PaymentResource), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPaymentById(int paymentId)
     {
         var payment = await queryService.Handle(new GetPaymentByIdQuery(paymentId));
