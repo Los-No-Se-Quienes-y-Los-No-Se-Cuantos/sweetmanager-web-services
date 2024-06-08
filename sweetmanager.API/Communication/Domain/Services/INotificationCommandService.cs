@@ -1,7 +1,7 @@
-using sweetmanager.API.communication.Domain.Model.Aggregates;
-using sweetmanager.API.communication.Domain.Model.Commands;
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Model.Commands;
 
-namespace sweetmanager.API.communication.Domain.Services;
+namespace sweetmanager.API.Communication.Domain.Services;
 
 public interface INotificationCommandService
 {

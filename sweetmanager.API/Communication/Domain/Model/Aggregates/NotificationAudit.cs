@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using EntityFrameworkCore.CreatedUpdatedDate.Contracts;
 
-namespace sweetmanager.API.communication.Domain.Model.Aggregates;
+namespace sweetmanager.API.Communication.Domain.Model.Aggregates;
 
 public partial class Notification : IEntityWithCreatedUpdatedDate
 {

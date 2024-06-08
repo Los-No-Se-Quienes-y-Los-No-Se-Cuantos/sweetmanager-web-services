@@ -1,6 +1,7 @@
-﻿using sweetmanager.API.communication.Domain.Model.Aggregates;
+﻿
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
 
-namespace sweetmanager.API.communication.Interfaces.REST.Transform;
+namespace sweetmanager.API.Communication.Interfaces.REST.Transform;
 
 public static class NotificationResourceFromEntityAssembler
 {

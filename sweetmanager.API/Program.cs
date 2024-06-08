@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using sweetmanager.API.communication.Application.Internal.CommandServices;
+using sweetmanager.API.Communication.Application.Internal.CommandServices;
 using sweetmanager.API.communication.Application.Internal.QueryServices;
-using sweetmanager.API.communication.Domain.Repositories;
-using sweetmanager.API.communication.Domain.Services;
+using sweetmanager.API.Communication.Domain.Repositories;
 using sweetmanager.API.Communication.Domain.Services;
-using sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Infrastructure.Socket;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;

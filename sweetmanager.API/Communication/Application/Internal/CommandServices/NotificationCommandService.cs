@@ -1,10 +1,10 @@
-using sweetmanager.API.communication.Domain.Model.Aggregates;
-using sweetmanager.API.communication.Domain.Model.Commands;
-using sweetmanager.API.communication.Domain.Repositories;
-using sweetmanager.API.communication.Domain.Services;
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Model.Commands;
+using sweetmanager.API.Communication.Domain.Repositories;
+using sweetmanager.API.Communication.Domain.Services;
 using sweetmanager.API.Shared.Domain.Repositories;
 
-namespace sweetmanager.API.communication.Application.Internal.CommandServices;
+namespace sweetmanager.API.Communication.Application.Internal.CommandServices;
 
 public class NotificationCommandService(INotificationRepository notificationRepository, IUnitOfWork unitOfWork) : INotificationCommandService
 {

@@ -1,11 +1,11 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using sweetmanager.API.communication.Domain.Model.Queries;
-using sweetmanager.API.communication.Domain.Services;
-using sweetmanager.API.communication.Interfaces.REST.Resources;
-using sweetmanager.API.communication.Interfaces.REST.Transform;
+using sweetmanager.API.Communication.Domain.Model.Queries;
+using sweetmanager.API.Communication.Domain.Services;
+using sweetmanager.API.Communication.Interfaces.REST.Resources;
+using sweetmanager.API.Communication.Interfaces.REST.Transform;
 
-namespace sweetmanager.API.communication.Interfaces.REST;
+namespace sweetmanager.API.Communication.Interfaces.REST;
 
 [ApiController]
 [Route("api/v1/[controller]")]

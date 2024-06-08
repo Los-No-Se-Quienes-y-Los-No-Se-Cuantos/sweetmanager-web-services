@@ -1,7 +1,7 @@
-﻿using sweetmanager.API.communication.Domain.Model.Commands;
-using sweetmanager.API.communication.Interfaces.REST.Resources;
+﻿using sweetmanager.API.Communication.Domain.Model.Commands;
+using sweetmanager.API.Communication.Interfaces.REST.Resources;
 
-namespace sweetmanager.API.communication.Interfaces.REST.Transform;
+namespace sweetmanager.API.Communication.Interfaces.REST.Transform;
 
 public static class CreateNotificationCommandFromResourceAssembler
 {

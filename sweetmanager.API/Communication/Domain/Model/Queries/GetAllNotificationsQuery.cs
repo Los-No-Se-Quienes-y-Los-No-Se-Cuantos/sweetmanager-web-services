@@ -1,3 +1,3 @@
-namespace sweetmanager.API.communication.Domain.Model.Queries;
+namespace sweetmanager.API.Communication.Domain.Model.Queries;
 
 public record GetAllNotificationsQuery();

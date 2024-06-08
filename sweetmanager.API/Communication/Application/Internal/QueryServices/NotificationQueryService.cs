@@ -1,7 +1,8 @@
-using sweetmanager.API.communication.Domain.Model.Aggregates;
-using sweetmanager.API.communication.Domain.Model.Queries;
-using sweetmanager.API.communication.Domain.Repositories;
-using sweetmanager.API.communication.Domain.Services;
+
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Model.Queries;
+using sweetmanager.API.Communication.Domain.Repositories;
+using sweetmanager.API.Communication.Domain.Services;
 
 namespace sweetmanager.API.communication.Application.Internal.QueryServices;
 

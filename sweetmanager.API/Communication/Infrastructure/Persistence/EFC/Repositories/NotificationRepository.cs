@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using sweetmanager.API.communication.Domain.Model.Aggregates;
-using sweetmanager.API.communication.Domain.Repositories;
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
-namespace sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
+namespace sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 
 public class NotificationRepository(AppDbContext context) : BaseRepository<Notification>(context), INotificationRepository
 {
