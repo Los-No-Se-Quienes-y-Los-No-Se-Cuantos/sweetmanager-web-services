@@ -4,10 +4,21 @@ using sweetmanager.API.Rooms.Application.Internal.QueryServices;
 using sweetmanager.API.Rooms.Domain.Repositories;
 using sweetmanager.API.Rooms.Domain.Services;
 using sweetmanager.API.Rooms.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Communication.Application.Internal.CommandServices;
+using sweetmanager.API.communication.Application.Internal.QueryServices;
+using sweetmanager.API.Communication.Domain.Repositories;
+using sweetmanager.API.Communication.Domain.Services;
+using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Communication.Infrastructure.Socket;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Subscriptions.Application.Internal.CommandServices;
+using sweetmanager.API.Subscriptions.Application.Internal.QueryServices;
+using sweetmanager.API.Subscriptions.Domain.Repositories;
+using sweetmanager.API.Subscriptions.Domain.Services;
+using sweetmanager.API.Subscriptions.Infrastructure.Persistence.EFC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +44,8 @@ builder.Services.AddDbContext<AppDbContext>(
                     .EnableDetailedErrors();    
     });
 
+
+
 // Configure Lowercase URLs
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -52,6 +65,19 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 // Shared Bounded Context Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
+
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
+
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+builder.Services.AddScoped<IWebSocketHandler, WebSocketHandler>();
+
+// Subscription Bounded Context Injection Configuration
+builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
 var app = builder.Build();
 
 // Verify Database Objects are created
@@ -61,6 +87,21 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
+
+#region ConfigurationSocket
+
+var webSocketOptions = new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2),
+};
+
+app.UseWebSockets(webSocketOptions);
+
+var webSocketHandler = new WebSocketHandler();
+
+app.Map("/communication", webSocketHandler.HandleWebSocketAsync);
+
+#endregion
 
 // Configuration cors
 app.UseCors(

@@ -36,9 +36,11 @@ The Supplies Context is responsible for managing the supplies of the hotel. It i
 - Update the information of the Supply.
 - List all the supplies in real time.
 
-### Interaction Context
-The Interaction Context is responsible for managing the notifications of the users. It includes the following features:
+### Communication Context
+The Communication Context is responsible for managing the notifications of the users. It includes the following features:
 - List all the notifications in real time.
+- Create Notifications in real time.
+- Get Notification By Id.
 
 ### Payment Context
 The Payment Context is responsable for managing the subscriptions and payments of the users. It includes the following features:
