@@ -1,4 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.Rooms.Application.Internal.CommandServices;
+using sweetmanager.API.Rooms.Application.Internal.QueryServices;
+using sweetmanager.API.Rooms.Domain.Repositories;
+using sweetmanager.API.Rooms.Domain.Services;
+using sweetmanager.API.Rooms.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Application.Internal.CommandServices;
 using sweetmanager.API.communication.Application.Internal.QueryServices;
 using sweetmanager.API.Communication.Domain.Repositories;
@@ -48,6 +53,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure Dependency Injection
+
+// Rooms Bounded Context Injection Configuration
+builder.Services.AddScoped<IBedroomCommandService, BedroomCommandService>();
+builder.Services.AddScoped<IBookingCommandService, BookingCommandService>();
+builder.Services.AddScoped<IBedroomQueryService, BedroomQueryService>();
+builder.Services.AddScoped<IBookingQueryService, BookingQueryService>();
+builder.Services.AddScoped<IBedroomRepository, BedroomRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 // Shared Bounded Context Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

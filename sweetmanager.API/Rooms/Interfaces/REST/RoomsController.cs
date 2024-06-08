@@ -10,7 +10,7 @@ namespace sweetmanager.API.Rooms.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class BedroomsController(IBedroomCommandService bedroomCommandService,
+public class RoomsController(IBedroomCommandService bedroomCommandService,
                                 IBedroomQueryService bedroomQueryService) : ControllerBase
 {
     [HttpPost]
