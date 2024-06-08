@@ -4,6 +4,7 @@ using sweetmanager.API.communication.Application.Internal.QueryServices;
 using sweetmanager.API.communication.Domain.Repositories;
 using sweetmanager.API.communication.Domain.Services;
 using sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.communication.Interfaces.SOCKET;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -33,6 +34,8 @@ builder.Services.AddDbContext<AppDbContext>(
                     .EnableDetailedErrors();    
     });
 
+
+
 // Configure Lowercase URLs
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -59,6 +62,21 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
+
+#region ConfigurationSocket
+
+var webSocketOptions = new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2),
+};
+
+app.UseWebSockets(webSocketOptions);
+
+var webSocketHandler = new WebSocketHandler();
+
+app.Map("/communication", webSocketHandler.HandleWebSocketAsync);
+
+#endregion
 
 // Configuration cors
 app.UseCors(
