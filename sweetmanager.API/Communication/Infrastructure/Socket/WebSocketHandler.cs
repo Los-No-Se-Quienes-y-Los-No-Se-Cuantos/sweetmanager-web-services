@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
-using sweetmanager.API.Communication.Infrastructure.Socket;
+using sweetmanager.API.Communication.Domain.Services;
 
-namespace sweetmanager.API.communication.Interfaces.SOCKET;
+namespace sweetmanager.API.Communication.Infrastructure.Socket;
 
 public class WebSocketHandler : IWebSocketHandler
 {
     private static readonly ConcurrentDictionary<string, List<WebSocket>> _rooms = new();
-
+    
     public async Task HandleWebSocketAsync(HttpContext context)
     {
         if (context.WebSockets.IsWebSocketRequest)
@@ -19,8 +19,7 @@ public class WebSocketHandler : IWebSocketHandler
 
             if (string.IsNullOrEmpty(room))
             {
-                await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room name is required",
-                    CancellationToken.None);
+                await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room name is required", CancellationToken.None);
 
                 return;
             }
@@ -36,21 +35,19 @@ public class WebSocketHandler : IWebSocketHandler
 
             _rooms[room].Remove(webSocket);
 
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by the WebSocketHandler",
-                CancellationToken.None);
+            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by the WebSocketHandler", CancellationToken.None);
         }
         else
         {
             context.Response.StatusCode = 400;
         }
     }
-
+    
     private async Task ReceiveMessages(WebSocket webSocket, string room)
     {
         var buffer = new byte[1024 * 4];
 
-        WebSocketReceiveResult result =
-            await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
         while (!result.CloseStatus.HasValue)
         {
@@ -61,7 +58,7 @@ public class WebSocketHandler : IWebSocketHandler
             result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
         }
     }
-
+    
     private async Task BroadcastMessage(string message, WebSocket senderWebSocket, string room)
     {
         var messageBuffer = Encoding.UTF8.GetBytes(message);
@@ -71,8 +68,8 @@ public class WebSocketHandler : IWebSocketHandler
             foreach (var socket in sockets)
             {
                 if (socket != senderWebSocket && socket.State == WebSocketState.Open)
-                    await socket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true,
-                        CancellationToken.None);
+                    await socket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
             }
         }
     }
