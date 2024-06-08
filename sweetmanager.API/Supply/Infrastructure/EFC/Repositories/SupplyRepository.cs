@@ -6,12 +6,12 @@ using sweetmanager.API.Supply.Domain.Repositories;
 
 namespace sweetmanager.API.Supply.Infrastructure.EFC.Repositories;
 
-public class SupplySourceRepository : BaseRepository<SupplySource>, ISupplySourceRepository
+public class SupplyRepository : BaseRepository<Domain.Model.Aggregates.Supply>, ISupplyRepository
 {
-    public SupplySourceRepository(AppDbContext context) : base(context) { }
+    public SupplyRepository(AppDbContext context) : base(context) { }
     
-    public async Task<SupplySource> GetSupplySourceByIdAsync(int id)
+    public async Task<Domain.Model.Aggregates.Supply> GetSupplySourceByIdAsync(int id)
     {
-        return await Context.Set<SupplySource>().FirstOrDefaultAsync(c => c.Id == id);
+        return await Context.Set<Domain.Model.Aggregates.Supply>().FirstOrDefaultAsync(c => c.Id == id);
     }
 }

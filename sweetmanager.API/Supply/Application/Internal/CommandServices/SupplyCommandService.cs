@@ -6,13 +6,13 @@ using sweetmanager.API.Supply.Domain.Services;
 
 namespace sweetmanager.API.Supply.Application.Internal.CommandServices;
 
-public class SupplySourceCommandService (ISupplySourceRepository supplySourceRepository, IUnitOfWork unitOfWork) 
-    :ISupplySourceCommandService
+public class SupplyCommandService (ISupplyRepository supplyRepository, IUnitOfWork unitOfWork) 
+    :ISupplyCommandService
 {
-    public async Task<SupplySource> Handle(CreateSupplySourceCommand command)
+    public async Task<Domain.Model.Aggregates.Supply> Handle(CreateSupplyCommand command)
     {
-        var supplySource  = new SupplySource(command);
-        await supplySourceRepository.AddAsync(new SupplySource(command));
+        var supplySource  = new Domain.Model.Aggregates.Supply(command);
+        await supplyRepository.AddAsync(new Domain.Model.Aggregates.Supply(command));
         await unitOfWork.CompleteAsync();
         return supplySource;
     }

@@ -3,7 +3,7 @@ using sweetmanager.API.Supply.Domain.Model.Aggregates;
 
 namespace sweetmanager.API.Supply.Domain.Repositories;
 
-public interface ISupplySourceRepository : IBaseRepository<SupplySource>
+public interface ISupplyRepository : IBaseRepository<Model.Aggregates.Supply>
 {
-    Task<SupplySource> GetSupplySourceByIdAsync(int id);
+    Task<Model.Aggregates.Supply> GetSupplySourceByIdAsync(int id);
 }

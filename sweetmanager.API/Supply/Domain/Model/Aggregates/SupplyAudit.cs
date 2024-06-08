@@ -3,7 +3,7 @@ using EntityFrameworkCore.CreatedUpdatedDate.Contracts;
 
 namespace sweetmanager.API.Supply.Domain.Model.Aggregates;
 
-public partial class SupplySource : IEntityWithCreatedUpdatedDate
+public partial class Supply : IEntityWithCreatedUpdatedDate
 {
         [Column("CreatedAt")] public DateTimeOffset? CreatedDate { get; set; }        
 }

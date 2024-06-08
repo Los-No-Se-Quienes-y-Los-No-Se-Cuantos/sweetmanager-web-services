@@ -3,7 +3,7 @@ using sweetmanager.API.Supply.Domain.Model.Commands;
 
 namespace sweetmanager.API.Supply.Domain.Services;
 
-public interface ISupplySourceCommandService
+public interface ISupplyCommandService
 {
-    Task<SupplySource> Handle(CreateSupplySourceCommand command);
+    Task<Model.Aggregates.Supply> Handle(CreateSupplyCommand command);
 }

@@ -2,7 +2,7 @@
 
 namespace sweetmanager.API.Supply.Domain.Model.Aggregates;
 
-public partial class SupplySource
+public partial class Supply
 {
     public int Id { get; private set; }
     public string Product { get; private set; }
@@ -11,7 +11,7 @@ public partial class SupplySource
     public string ExpireDate { get; private set; }
     public decimal Price { get; private set; }
     
-    public SupplySource()
+    public Supply()
     {
         this.Product = string.Empty;
         this.Quantity = 0;
@@ -19,7 +19,7 @@ public partial class SupplySource
         this.ExpireDate = string.Empty;
         this.Price = 0;
     }
-    public SupplySource(CreateSupplySourceCommand command)
+    public Supply(CreateSupplyCommand command)
     {
         this.Product = command.Product;
         this.Quantity = command.Quantity;

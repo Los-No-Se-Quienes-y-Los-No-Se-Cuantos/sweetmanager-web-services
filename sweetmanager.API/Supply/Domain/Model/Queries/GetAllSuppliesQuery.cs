@@ -1,3 +1,3 @@
 ﻿namespace sweetmanager.API.Supply.Domain.Model.Queries;
 
-public record GetAllSuppliesSourceQuery();
+public record GetAllSuppliesQuery();
