@@ -5,5 +5,5 @@ namespace sweetmanager.API.Subscriptions.Domain.Services;
 
 public interface ISubscriptionCommandService
 {
-    Task<Subscription> Handle(CreateSubscriptionCommand command);
+    Task<Subscription?> Handle(CreateSubscriptionCommand command);
 }

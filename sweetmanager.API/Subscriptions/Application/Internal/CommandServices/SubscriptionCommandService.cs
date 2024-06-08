@@ -9,7 +9,7 @@ namespace sweetmanager.API.Subscriptions.Application.Internal.CommandServices;
 public class SubscriptionCommandService(ISubscriptionRepository subscriptionRepository, IUnitOfWork unitOfWork)
 : ISubscriptionCommandService
 {
-    public async Task<Subscription> Handle(CreateSubscriptionCommand command)
+    public async Task<Subscription?> Handle(CreateSubscriptionCommand command)
     {
         var subscription = await subscriptionRepository.FindByTitleAsync(command.Title);
         if (subscription != null)
