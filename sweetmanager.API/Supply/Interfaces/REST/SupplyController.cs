@@ -26,7 +26,7 @@ public class SupplyController(
             supplySourceResource);
     }
     
-    [HttpPost]
+    [HttpGet]
     public async Task<IActionResult> GetAllSuppliesSources()
     {
         var getAllSuppliesSourcesQuery = new GetAllSuppliesQuery();
