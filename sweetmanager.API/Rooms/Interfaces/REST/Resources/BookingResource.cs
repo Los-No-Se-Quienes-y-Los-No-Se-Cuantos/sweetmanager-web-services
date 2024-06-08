@@ -1,4 +1,3 @@
 ﻿namespace sweetmanager.API.Rooms.Interfaces.REST.Resources;
 
-public record BookingResource(int ClientId, int BedroomId, DateTime StartDate,
-                              DateTime FinalDate, float TotalPrice, String State);
+public record BookingResource(int ClientId, int BedroomId, string Detail, string State);
