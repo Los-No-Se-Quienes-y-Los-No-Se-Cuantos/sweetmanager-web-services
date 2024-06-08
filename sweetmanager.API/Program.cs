@@ -46,6 +46,13 @@ builder.Services.AddControllers( options => options.Conventions.Add(new KebabCas
 // Add Database Connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+var connectionStringFromEnvironment = Environment.GetEnvironmentVariable("SweetManagerDbConnection");
+
+if (connectionStringFromEnvironment != null)
+{
+    connectionString = connectionStringFromEnvironment;
+}
+
 // Configure Database Context and Logging Levels
 builder.Services.AddDbContext<AppDbContext>(
     options =>
@@ -143,13 +150,13 @@ app.UseCors(
     b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin() 
 );
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

@@ -1,0 +1,30 @@
+﻿services:
+  sweet-manager.api:
+    image: sweet-manager.api
+    ports:
+      - "8563:8563"
+    expose:
+      - "8563"
+    build:
+      context: .
+      dockerfile: sweetmanager.API/Dockerfile
+    environment:
+      SweetManagerDbConnection: Server=sweet-manager_mysql;Database=sweetmanager;User=root;Password=securepassword123
+      ASPNETCORE_URLS: http://+:8563
+    restart: always
+    depends_on:
+      sweet-manager_mysql:
+        condition: service_healthy
+  sweet-manager_mysql:
+    image: 'mysql:latest'
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: securepassword123
+      MYSQL_PASSWORD: securepassword123
+      MYSQL_DATABASE: sweetmanager
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10we
