@@ -4,6 +4,7 @@ using sweetmanager.API.communication.Application.Internal.QueryServices;
 using sweetmanager.API.communication.Domain.Repositories;
 using sweetmanager.API.communication.Domain.Services;
 using sweetmanager.API.communication.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Communication.Infrastructure.Socket;
 using sweetmanager.API.communication.Interfaces.SOCKET;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
@@ -52,6 +53,8 @@ builder.Services.AddScoped<INotificationCommandService, NotificationCommandServi
 builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+builder.Services.AddScoped<IWebSocketHandler, WebSocketHandler>();
 
 var app = builder.Build();
 
