@@ -16,7 +16,7 @@ public class PaymentCommandService(IPaymentRepository paymentRepository, IUnitOf
         {
             throw new Exception("Profile not found");
         }
-        var payment = new Payment(command, profileId.Id);
+        var payment = new Payment(command, profileId.ProfileId);
         await paymentRepository.AddAsync(payment);
         await unitOfWork.CompleteAsync();
         return payment;

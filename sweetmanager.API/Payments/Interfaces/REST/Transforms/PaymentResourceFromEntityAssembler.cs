@@ -9,7 +9,7 @@ public class PaymentResourceFromEntityAssembler
     {
         return new PaymentResource(
             entity.Id,
-            entity.ProfileId.Id,
+            entity.ProfileId.ProfileId,
             entity.CardInfo.CardHolderName,
             entity.CardInfo.CardNumber,
             entity.CardInfo.ExpiryDate,
