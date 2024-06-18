@@ -1,6 +1,7 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using sweetmanager.API.Payments.Domain.Model.Aggregates;
+using sweetmanager.API.Payments.Domain.Model.ValueObjects;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using sweetmanager.API.Subscriptions.Domain.Model.Aggregates;
@@ -78,8 +79,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 v => string.Join("%-%", v),
                 v => v.Split("%-%", StringSplitOptions.RemoveEmptyEntries).ToList());
         });
-
-        //  Pament
         builder.Entity<Payment>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -100,12 +99,11 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(e => e.Amount)
                 .IsRequired();
 
-            entity.OwnsOne(e => e.ProfileId,
-                i =>
-                {
-                    i.WithOwner().HasForeignKey("Id");
-                    i.Property(p => p.Id).HasColumnName("ProfileId");
-                });
+            entity.OwnsOne(e => e.ProfileId, i =>
+            {
+                i.WithOwner().HasForeignKey("Id");
+                i.Property(p => p.Identifier).HasColumnName("Identifier");
+            });
         });
 
         /*
