@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using sweetmanager.API.Clients.Application.Internal.CommandServices;
 using sweetmanager.API.Clients.Application.Internal.QueryServices;
 using sweetmanager.API.Clients.Domain.Repositories;
@@ -75,7 +76,51 @@ builder.Services.AddDbContext<AppDbContext>(
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc("v1",
+            new OpenApiInfo
+            {
+                Title = "Sweet Manager API",
+                Version = "v1",
+                Description = "Sweet Manager API",
+                TermsOfService = new Uri("https://acme-learning.com/tos"),
+                Contact = new OpenApiContact
+                {
+                    Name = "Sweet Manager Studios",
+                    Email = "contact@swm.com"
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "Apache 2.0",
+                    Url = new Uri("https://www.apache.org/licenses/LICENSE-2.0.html")
+                }
+            });
+        c.EnableAnnotations();
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer", Type = ReferenceType.SecurityScheme
+                    } 
+                }, 
+                Array.Empty<string>()
+            }
+        });
+    });
 
 // Configure Dependency Injection
 
