@@ -14,6 +14,8 @@ public partial class Payment
     public ProfileId ProfileId { get; private set; }
 
     public decimal Amount { get; private set; }
+    
+    public Payment() {}
 
     public Payment(CreatePaymentCommand command)
     {

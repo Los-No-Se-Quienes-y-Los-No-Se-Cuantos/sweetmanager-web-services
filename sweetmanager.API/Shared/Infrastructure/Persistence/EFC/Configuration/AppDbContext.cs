@@ -1,7 +1,10 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.Payments.Domain.Model.Aggregates;
+using sweetmanager.API.Payments.Domain.Model.ValueObjects;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using sweetmanager.API.Subscriptions.Domain.Model.Aggregates;
 
 namespace sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -17,11 +20,11 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<Bedroom>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
+
             entity.OwnsOne(e => e.Information, i =>
             {
                 i.WithOwner().HasForeignKey("Id");
@@ -29,7 +32,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 i.Property(b => b.TotalBed).HasColumnName("TotalBed");
                 i.Property(b => b.TotalTelevision).HasColumnName("TotalTelevision");
             });
-            
+
             entity.Property(e => e.BedroomStatus)
                 .HasColumnName("state")
                 .IsRequired()
@@ -39,11 +42,11 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Booking>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
+
             entity.HasOne<Bedroom>()
                 .WithMany()
                 .HasForeignKey(e => e.BedroomId);
-            
+
             entity.OwnsOne(e => e.Detail, i =>
             {
                 i.WithOwner().HasForeignKey("Id");
@@ -56,13 +59,53 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             /*entity.HasOne<Client>()
                 .WithMany()
                 .HasForeignKey(e => e.ClientId);*/
-            
+
             entity.Property(e => e.BookingStatus)
                 .HasColumnName("state")
                 .IsRequired()
                 .HasMaxLength(50);
         });
-        
+
+        // Suscriptions
+        builder.Entity<Subscription>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Price).IsRequired();
+            entity.Property(e => e.Features).IsRequired();
+            entity.Property(e => e.Features).HasConversion(
+                v => string.Join("%-%", v),
+                v => v.Split("%-%", StringSplitOptions.RemoveEmptyEntries).ToList());
+        });
+        builder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Email)
+                .IsRequired();
+
+            entity.OwnsOne(e => e.CardInfo, i =>
+            {
+                i.WithOwner().HasForeignKey("Id");
+                i.Property(c => c.CardNumber).HasColumnName("CardNumber");
+                i.Property(c => c.CardHolderName).HasColumnName("CardHolderName");
+                i.Property(c => c.ExpiryDate).HasColumnName("ExpiryDate");
+                i.Property(c => c.Cvv).HasColumnName("Cvv");
+            });
+
+            entity.Property(e => e.Amount)
+                .IsRequired();
+
+            entity.OwnsOne(e => e.ProfileId, i =>
+            {
+                i.WithOwner().HasForeignKey("Id");
+                i.Property(p => p.Identifier).HasColumnName("Identifier");
+            });
+        });
+
         /*
         // Place here your entities configuration
 
@@ -93,16 +136,16 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<VideoAsset>().Property(p => p.VideoUri).IsRequired();
         builder.Entity<ReadableContentAsset>().Property(p => p.ReadableContent).IsRequired();
         builder.Entity<Tutorial>().HasMany(t => t.Assets);
-        
+
         // Category Relationships
         builder.Entity<Category>()
             .HasMany(c => c.Tutorials)
             .WithOne(t => t.Category)
             .HasForeignKey(t => t.CategoryId)
             .HasPrincipalKey(t => t.Id);
-        
+
         // Profiles Context
-        
+
         builder.Entity<Profile>().HasKey(p => p.Id);
         builder.Entity<Profile>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Profile>().OwnsOne(p => p.Name,
@@ -131,9 +174,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 a.Property(s => s.Country).HasColumnName("AddressCountry");
             });
 
-        
+
         // Apply SnakeCase Naming Convention
-        
+
         */
         builder.UseSnakeCaseWithPluralizedTableNamingConvention();
     }
