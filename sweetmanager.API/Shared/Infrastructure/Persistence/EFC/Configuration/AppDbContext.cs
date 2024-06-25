@@ -1,5 +1,7 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
+using sweetmanager.API.Clients.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Model.Aggregates;
 using sweetmanager.API.Payments.Domain.Model.Aggregates;
 using sweetmanager.API.Payments.Domain.Model.ValueObjects;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
@@ -105,7 +107,46 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 i.Property(p => p.Identifier).HasColumnName("Identifier");
             });
         });
+        builder.Entity<Client>().HasKey(c => c.Id);
+        builder.Entity<Client>().Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Client>().Property(c => c.Name).IsRequired();
+        builder.Entity<Client>().Property(c => c.LastName).IsRequired();
+        builder.Entity<Client>().Property(c => c.Age).IsRequired();
+        builder.Entity<Client>().Property(c => c.Genre).IsRequired();
+        builder.Entity<Client>().Property(c => c.Phone).IsRequired();
+        builder.Entity<Client>().Property(c => c.Email).IsRequired();
+        builder.Entity<Client>().Property(c => c.State).IsRequired();
 
+        builder.Entity<Notification>().HasKey(c => c.Id);
+        builder.Entity<Notification>().Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Notification>().Property(c => c.Title).IsRequired();
+        builder.Entity<Notification>().Property(c => c.Message).IsRequired();
+        
+        builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Product)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Quantity)
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.Address)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.ExpireDate)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            entity.Property(e => e.Price)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
+        });
+        
         /*
         // Place here your entities configuration
 
