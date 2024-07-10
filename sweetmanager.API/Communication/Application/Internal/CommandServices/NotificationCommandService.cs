@@ -12,7 +12,7 @@ public class NotificationCommandService(INotificationRepository notificationRepo
     {
         var notification = new Notification(command);
         
-        await notificationRepository.AddAsync(new Notification(command));
+        await notificationRepository.AddAsync(notification);
 
         await unitOfWork.CompleteAsync();
 

@@ -12,6 +12,7 @@ namespace sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Services;
 public class TokenService(IOptions<TokenSettings> tokenSettings) : ITokenService
 {
     private readonly TokenSettings _tokenSettings = tokenSettings.Value;
+    
     public string GenerateToken(User user)
     {
         var secret = _tokenSettings.Secret;

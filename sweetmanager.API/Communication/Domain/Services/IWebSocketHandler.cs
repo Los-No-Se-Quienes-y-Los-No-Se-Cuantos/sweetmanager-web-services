@@ -3,5 +3,4 @@
 public interface IWebSocketHandler
 {
     Task HandleWebSocketAsync(HttpContext context);
-    
 }

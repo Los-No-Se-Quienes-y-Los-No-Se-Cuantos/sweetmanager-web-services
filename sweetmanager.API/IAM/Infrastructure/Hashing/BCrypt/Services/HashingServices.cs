@@ -1,8 +1,9 @@
+using sweetmanager.API.IAM.Application.Internal.OutboundContext;
 using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace sweetmanager.API.IAM.Infrastructure.Hashing.BCrypt.Services;
 
-public class HashingServices
+public class HashingServices : IHashingService
 {
     public string HashPassword(string password)
     {

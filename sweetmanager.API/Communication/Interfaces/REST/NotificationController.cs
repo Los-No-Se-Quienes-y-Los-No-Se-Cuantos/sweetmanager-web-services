@@ -19,11 +19,11 @@ public class NotificationController(INotificationCommandService notificationComm
         
         var notification = await notificationCommandService.Handle(createNotificationCommand);
         
-        if (notification == null) BadRequest();
+        if (notification == null) BadRequest("Could not create notification");
         
         var notificationResource = NotificationResourceFromEntityAssembler.ToResourceFromEntity(notification);
 
-        return CreatedAtAction(nameof(GetNotificationById), new { notificationId = notification.Id }, notificationResource);
+        return Created(HttpContext.Request.Path, notificationResource);
     }
 
     [HttpGet]
@@ -36,20 +36,5 @@ public class NotificationController(INotificationCommandService notificationComm
         var notificationResources = notifications.Select(NotificationResourceFromEntityAssembler.ToResourceFromEntity);
 
         return Ok(notificationResources);
-    }
-    
-    
-    [HttpGet("{notificationId:int}")]
-    public async Task<IActionResult> GetNotificationById(int notificationId)
-    {
-        var getNotificationByIdQuery = new GetNotificationByIdQuery(notificationId);
-        
-        var notification = await notificationQueryService.Handle(getNotificationByIdQuery);
-
-        if (notification == null) return NotFound();
-        
-        var notificationResource = NotificationResourceFromEntityAssembler.ToResourceFromEntity(notification);
-
-        return Ok(notificationResource);
     }
 }

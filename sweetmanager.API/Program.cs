@@ -18,6 +18,17 @@ using sweetmanager.API.Communication.Domain.Repositories;
 using sweetmanager.API.Communication.Domain.Services;
 using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Infrastructure.Socket;
+using sweetmanager.API.IAM.Application.Internal.CommandServices;
+using sweetmanager.API.IAM.Application.Internal.OutboundContext;
+using sweetmanager.API.IAM.Application.Internal.QueryServices;
+using sweetmanager.API.IAM.Domain.Repositories;
+using sweetmanager.API.IAM.Domain.Services;
+using sweetmanager.API.IAM.Infrastructure.Hashing.BCrypt.Services;
+using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Configuration;
+using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Services;
+using sweetmanager.API.IAM.Interfaces.ACL;
+using sweetmanager.API.IAM.Interfaces.ACL.Services;
 using sweetmanager.API.Payments.Application.Internal.CommandService;
 using sweetmanager.API.Payments.Application.Internal.OutboundServices.ACL;
 using sweetmanager.API.Payments.Application.Internal.QueryService;
@@ -164,6 +175,16 @@ builder.Services.AddScoped<IClientCommandService, ClientCommandService>();
 builder.Services.AddScoped<IClientQueryService, ClientQueryService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientsContextFacade, ClientsContextFacade>();
+
+// IAM Bounded Context Injection Configuration
+
+builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
+builder.Services.AddScoped<IHashingService, HashingServices>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 
 var app = builder.Build();
 
