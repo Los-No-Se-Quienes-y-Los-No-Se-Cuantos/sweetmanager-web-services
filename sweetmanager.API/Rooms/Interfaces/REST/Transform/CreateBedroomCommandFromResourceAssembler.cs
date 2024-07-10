@@ -7,7 +7,7 @@ public class CreateBedroomCommandFromResourceAssembler
 {
     public static CreateBedroomCommand ToCommandFromResource(CreateBedroomResource resource) {
 
-        return new CreateBedroomCommand(resource.TypeBedroom, resource.TotalBed, resource.TotalBathroom,
-            resource.TotalTelevision, resource.State);
+        return new CreateBedroomCommand(resource.Name, resource.TotalBed, resource.TotalBathroom,
+            resource.TotalTelevision, resource.State, resource.Description, resource.Worker, resource.Client, resource.Price);
     }
 }

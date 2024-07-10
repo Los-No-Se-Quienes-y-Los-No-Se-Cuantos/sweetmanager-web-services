@@ -10,30 +10,34 @@ public class BedroomCommandService(
     IBedroomRepository bedroomRepository,
     IUnitOfWork unitOfWork) : IBedroomCommandService
 {
-    public async Task<Bedroom> Handle(CreateBedroomCommand command)
+    public async Task<Bedroom?> Handle(CreateBedroomCommand command)
     {
         try
         {
-            await bedroomRepository.AddAsync(new(command));
+            var result = new Bedroom(command);
+            
+            await bedroomRepository.AddAsync(result);
 
             await unitOfWork.CompleteAsync();
 
-            return new(command);
+            return result;
         }
         catch (Exception)
         {
-            return new();
+            return null;
         }
     }
 
-    public async Task<Bedroom> Handle(UpdateBedroomCommand command)
+    public async Task<Bedroom?> Handle(UpdateBedroomCommand command)
     {
         try
         {
             var result = await bedroomRepository.FindByIdAsync(command.Id);
 
-            if (result != null)
-                bedroomRepository.Update(new Bedroom(command));
+            if (result == null)
+                throw new Exception("Bedroom not found");
+
+            bedroomRepository.Update(new Bedroom(command));
 
             await unitOfWork.CompleteAsync();
 
@@ -41,7 +45,7 @@ public class BedroomCommandService(
         }
         catch (Exception e)
         {
-            return new();
+            return null;
         }
     }
 }

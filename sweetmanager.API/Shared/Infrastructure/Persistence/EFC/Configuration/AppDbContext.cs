@@ -24,17 +24,33 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(builder);
 
+        // Monitoring Context
+        
         builder.Entity<Bedroom>(entity =>
         {
             entity.HasKey(e => e.Id);
 
+            entity.Property(e => e.TypeBedroom).IsRequired().HasConversion<string>();
+            
+            entity.Property(e => e.BedroomStatus).IsRequired().HasConversion<string>();
+            
             entity.OwnsOne(e => e.Information, i =>
             {
                 i.WithOwner().HasForeignKey("Id");
                 i.Property(b => b.TotalBathroom).HasColumnName("TotalBathroom");
                 i.Property(b => b.TotalBed).HasColumnName("TotalBed");
                 i.Property(b => b.TotalTelevision).HasColumnName("TotalTelevision");
+                i.Property(b => b.Description).HasColumnName("Description");
+                i.Property(b => b.Price).HasColumnName("Price");
             });
+
+            entity.OwnsOne(e => e.Personnel,
+                n =>
+                {
+                    n.WithOwner().HasForeignKey("Id");
+                    n.Property(e => e.Worker).HasColumnName("Worker");
+                    n.Property(e => e.Client).HasColumnName("Client");
+                });
 
             entity.Property(e => e.BedroomStatus)
                 .HasColumnName("state")
@@ -114,10 +130,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Client>().Property(c => c.Email).IsRequired();
         builder.Entity<Client>().Property(c => c.State).IsRequired();
 
-        builder.Entity<Notification>().HasKey(c => c.Id);
-        builder.Entity<Notification>().Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<Notification>().Property(c => c.Title).IsRequired();
-        builder.Entity<Notification>().Property(c => c.Message).IsRequired();
+        builder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(c => c.Title).IsRequired();
+            entity.Property(c => c.Message).IsRequired();
+        });
         
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
         {

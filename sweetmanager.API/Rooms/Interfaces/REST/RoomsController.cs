@@ -13,26 +13,6 @@ namespace sweetmanager.API.Rooms.Interfaces.REST;
 public class RoomsController(IBedroomCommandService bedroomCommandService,
                                 IBedroomQueryService bedroomQueryService) : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> CreateBedroom([FromBody] CreateBedroomResource resource)
-    {
-        var bedroom = await bedroomCommandService.Handle(CreateBedroomCommandFromResourceAssembler.ToCommandFromResource(resource));
-
-        var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
-
-        return Ok(bedroomResource);
-    }
-    
-    [HttpPut]
-    public async Task<IActionResult> UpdateBedroom([FromBody] UpdateBedroomResource resource)
-    {
-        var bedroom = await bedroomCommandService.Handle(UpdateBedroomCommandFromResourceAssembler.ToCommandFromResource(resource));
-
-        var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
-
-        return Ok(bedroomResource);
-    }
-    
     [HttpGet]
     public async Task<IActionResult> GetAllBedrooms()
     {
@@ -63,5 +43,27 @@ public class RoomsController(IBedroomCommandService bedroomCommandService,
         var bedroomResources = bedroom.Select(BedroomResourceFromEntityAssembler.ToResourceFromEntity);
 
         return Ok(bedroomResources);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateBedroom([FromBody] CreateBedroomResource resource)
+    {
+        var bedroom = await bedroomCommandService.Handle(CreateBedroomCommandFromResourceAssembler.ToCommandFromResource(resource));
+
+        if (bedroom is null) return BadRequest("Bedroom not created");
+        
+        var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
+
+        return Ok(bedroomResource);
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateBedroom([FromBody] UpdateBedroomResource resource)
+    {
+        var bedroom = await bedroomCommandService.Handle(UpdateBedroomCommandFromResourceAssembler.ToCommandFromResource(resource));
+
+        var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
+
+        return Ok(bedroomResource);
     }
 }

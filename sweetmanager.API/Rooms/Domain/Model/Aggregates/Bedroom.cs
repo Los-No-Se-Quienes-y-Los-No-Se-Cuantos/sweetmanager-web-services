@@ -1,4 +1,5 @@
 using Humanizer;
+using Microsoft.OpenApi.Extensions;
 using sweetmanager.API.Rooms.Domain.Model.Commands;
 using sweetmanager.API.Rooms.Domain.Model.ValueObjects;
 
@@ -11,38 +12,50 @@ public class Bedroom
     public ETypeBedroom TypeBedroom { get; private set; }
     public EBedroomStatus BedroomStatus { get; private set; }
 
+    public BedroomPersonnelInformation Personnel { get; private set; }
+    
     public string ResourcesRoom => Information.Resources();
 
+    public bool IsBusy => BedroomStatus == EBedroomStatus.Busy;
+    
     public Bedroom()
     {
         Information = new BedroomInformation();
     }
-    public Bedroom(int totalBed, int totalBathroom, int totalTelevision, string state)
-    {
-        Information = new BedroomInformation(totalBed, totalBathroom, totalTelevision);
 
-        if (state == "Busy") BedroomStatus = EBedroomStatus.Busy;
-        else BedroomStatus = EBedroomStatus.NotBusy;
+    public string TypeBedroomName => TypeBedroom.ToString().Humanize();
+    
+    public Bedroom(int totalBed, int totalBathroom, int totalTelevision, string description, decimal price)
+    {
+        Information = new BedroomInformation(totalBed, totalBathroom, totalTelevision, description, price);
     }
     public Bedroom(CreateBedroomCommand command)
     {
-        if (command.TypeBedroom == "Royal") TypeBedroom = ETypeBedroom.Royal;
-        else TypeBedroom = ETypeBedroom.Standard;
+        TypeBedroom = command.TypeBedroom == "Royal" ?
+            ETypeBedroom.Royal : ETypeBedroom.Standard;
         
-        Information = new BedroomInformation(command.TotalBed, command.TotalBathroom, command.TotalTelevision);
+        Information = new BedroomInformation(command.TotalBed, command.TotalBathroom, 
+            command.TotalTelevision, command.Description, command.Price);
         
-        if (command.State == "Busy") BedroomStatus = EBedroomStatus.Busy;
-        else BedroomStatus = EBedroomStatus.NotBusy;
+        BedroomStatus = command.State == "Busy" ? 
+            EBedroomStatus.Busy : EBedroomStatus.NotBusy;
+        
+        Personnel = new BedroomPersonnelInformation(command.Worker, command.Client);
     }
 
     public Bedroom(UpdateBedroomCommand command)
     {
-        if (command.TypeBedroom == "Royal") TypeBedroom = ETypeBedroom.Royal;
-        else TypeBedroom = ETypeBedroom.Standard;
+        Id = command.Id;
         
-        Information = new BedroomInformation(command.TotalBed, command.TotalBathroom, command.TotalTelevision);
+        TypeBedroom = command.TypeBedroom == "Royal" ? 
+            ETypeBedroom.Royal : ETypeBedroom.Standard;
         
-        if (command.State == "Busy") BedroomStatus = EBedroomStatus.Busy;
-        else BedroomStatus = EBedroomStatus.NotBusy;
+        Information = new BedroomInformation(command.TotalBed, command.TotalBathroom,
+            command.TotalTelevision, command.Description, command.Price);
+        
+        BedroomStatus = command.State == "Busy" ?
+            EBedroomStatus.Busy : EBedroomStatus.NotBusy;
+        
+        Personnel = new BedroomPersonnelInformation(command.Worker, command.Client);
     }
 }
