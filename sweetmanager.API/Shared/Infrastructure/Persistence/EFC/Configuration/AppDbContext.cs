@@ -30,6 +30,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         {
             entity.HasKey(e => e.Id);
 
+            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+            
             entity.Property(e => e.TypeBedroom).IsRequired().HasConversion<string>();
             
             entity.Property(e => e.BedroomStatus).IsRequired().HasConversion<string>();

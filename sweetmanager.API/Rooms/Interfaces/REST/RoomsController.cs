@@ -62,6 +62,8 @@ public class RoomsController(IBedroomCommandService bedroomCommandService,
     {
         var bedroom = await bedroomCommandService.Handle(UpdateBedroomCommandFromResourceAssembler.ToCommandFromResource(resource));
 
+        if(bedroom is null) return BadRequest("Bedroom not updated");
+        
         var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
 
         return Ok(bedroomResource);

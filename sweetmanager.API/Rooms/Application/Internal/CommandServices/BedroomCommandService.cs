@@ -35,15 +35,17 @@ public class BedroomCommandService(
             var result = await bedroomRepository.FindByIdAsync(command.Id);
 
             if (result == null)
-                throw new Exception("Bedroom not found");
+                throw new Exception($"Bedroom with id {command.Id} not found");
 
-            bedroomRepository.Update(new Bedroom(command));
+            result.Update(command);
+            
+            bedroomRepository.Update(result);
 
             await unitOfWork.CompleteAsync();
 
-            return new(command);
+            return result;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return null;
         }

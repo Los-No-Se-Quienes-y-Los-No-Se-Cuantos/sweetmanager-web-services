@@ -43,10 +43,8 @@ public class Bedroom
         Personnel = new BedroomPersonnelInformation(command.Worker, command.Client);
     }
 
-    public Bedroom(UpdateBedroomCommand command)
+    public void Update(UpdateBedroomCommand command)
     {
-        Id = command.Id;
-        
         TypeBedroom = command.TypeBedroom == "Royal" ? 
             ETypeBedroom.Royal : ETypeBedroom.Standard;
         
