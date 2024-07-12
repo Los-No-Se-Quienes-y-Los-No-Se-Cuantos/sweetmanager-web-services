@@ -4,5 +4,6 @@ namespace sweetmanager.API.Clients.Domain.Repositories
 {
     public interface IClientRepository : IBaseRepository<Client>
     {
+        Task<Client?> FindByEmailAsync(string email);
     }
 }

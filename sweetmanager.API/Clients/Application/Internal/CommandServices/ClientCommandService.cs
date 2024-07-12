@@ -16,6 +16,7 @@ namespace sweetmanager.API.Clients.Application.Internal.CommandServices
             try
             {
                 await clientRepository.AddAsync(clientData);
+                
                 await unitOfWork.CompleteAsync();
 
                 return clientData;

@@ -1,21 +1,30 @@
+using sweetmanager.API.Clients.Domain.Model.Aggregates;
+using sweetmanager.API.Clients.Domain.Model.Commands;
+using sweetmanager.API.Clients.Domain.Model.Queries;
 using sweetmanager.API.Clients.Domain.Services;
 
 namespace sweetmanager.API.Clients.Interfaces.ACL.Services;
 
 public class ClientsContextFacade(IClientCommandService commandService, IClientQueryService queryService): IClientsContextFacade
 {
-    public Task<int> CreateClient(int id, string name, string lastName, int age, string genre, int phone, string email, string state)
+    public async Task<int> CreateClient(CreateClientCommand command)
     {
-        throw new NotImplementedException();
+        var client = await commandService.Handle(command);
+
+        return client?.Id ?? 0;
     }
 
-    public Task<int> FetchClientById(int id)
+    public async Task<int> FetchClientById(int id)
     {
-        throw new NotImplementedException();
+        var client = await queryService.Handle(new GetClientByIdQuery(id));
+        
+       return client?.Id ?? 0;
     }
 
-    public Task<int> FetchClientByEmail(string email)
+    public async Task<int> FetchClientByEmail(string email)
     {
-        throw new NotImplementedException();
+        var client = await queryService.Handle(new GetClientByEmailQuery(email));
+
+        return client?.Id ?? 0;
     }
 }

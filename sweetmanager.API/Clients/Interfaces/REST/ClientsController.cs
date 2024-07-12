@@ -31,9 +31,9 @@ namespace sweetmanager.API.Clients.Interfaces
         }
 
         [HttpGet("{profileId:int}")]
-        public async Task<IActionResult> GetProfileById(int clientId)
+        public async Task<IActionResult> GetProfileById(int profileId)
         {
-            var clientData = await clientQueryService.Handle(new GetClientByIdQuery(clientId));
+            var clientData = await clientQueryService.Handle(new GetClientByIdQuery(profileId));
 
             if (clientData == null) return NotFound();
 

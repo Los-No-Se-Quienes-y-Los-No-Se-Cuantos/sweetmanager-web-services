@@ -13,14 +13,16 @@ namespace sweetmanager.API.Payments.Interfaces.REST;
 public class PaymentController(IPaymentCommandService commandService, IPaymentQueryService queryService)
     : ControllerBase
 {
-
-
+    
     [HttpPost]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentResource resource)
     {
-        var command = CreatePaymentCommandFromResourceAssembler.ToCommandFromResource(resource);
-        var payment = await commandService.Handle(command);
+        
+        var payment = await commandService.Handle(CreatePaymentCommandFromResourceAssembler.ToCommandFromResource(resource));
+            
         return CreatedAtAction(nameof(GetPaymentById), new { paymentId = payment.Id }, payment);
+        
+        
     }
     
     private async Task<IActionResult> GetAllPayments()
@@ -50,8 +52,11 @@ public class PaymentController(IPaymentCommandService commandService, IPaymentQu
     public async Task<IActionResult> GetPaymentById(int paymentId)
     {
         var payment = await queryService.Handle(new GetPaymentByIdQuery(paymentId));
-        if (payment is null) return BadRequest();
+        
+        if (payment is null) return BadRequest("Payment not found");
+        
         var paymentResource = PaymentResourceFromEntityAssembler.ToResourceFromEntity(payment);
+        
         return Ok(paymentResource);
     }
 }

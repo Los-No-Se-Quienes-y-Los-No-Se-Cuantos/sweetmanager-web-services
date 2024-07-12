@@ -122,16 +122,19 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 i.Property(p => p.Identifier).HasColumnName("Identifier");
             });
         });
-        builder.Entity<Client>().HasKey(c => c.Id);
-        builder.Entity<Client>().Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<Client>().Property(c => c.Name).IsRequired();
-        builder.Entity<Client>().Property(c => c.LastName).IsRequired();
-        builder.Entity<Client>().Property(c => c.Age).IsRequired();
-        builder.Entity<Client>().Property(c => c.Genre).IsRequired();
-        builder.Entity<Client>().Property(c => c.Phone).IsRequired();
-        builder.Entity<Client>().Property(c => c.Email).IsRequired();
-        builder.Entity<Client>().Property(c => c.State).IsRequired();
-
+        builder.Entity<Client>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(c => c.Name).IsRequired();
+            entity.Property(c => c.LastName).IsRequired();
+            entity.Property(c => c.Age).IsRequired();
+            entity.Property(c => c.Genre).IsRequired();
+            entity.Property(c => c.Phone).IsRequired();
+            entity.Property(c => c.Email).IsRequired();
+            entity.Property(c => c.State).IsRequired();
+        });
+        
         builder.Entity<Notification>(entity =>
         {
             entity.HasKey(c => c.Id);

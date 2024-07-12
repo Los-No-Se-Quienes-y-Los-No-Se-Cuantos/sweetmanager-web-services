@@ -12,8 +12,11 @@ public class SupplyCommandService (ISupplyRepository supplyRepository, IUnitOfWo
     public async Task<Domain.Model.Aggregates.Supply> Handle(CreateSupplyCommand command)
     {
         var supplySource  = new Domain.Model.Aggregates.Supply(command);
-        await supplyRepository.AddAsync(new Domain.Model.Aggregates.Supply(command));
+        
+        await supplyRepository.AddAsync(supplySource);
+        
         await unitOfWork.CompleteAsync();
+        
         return supplySource;
     }
 }

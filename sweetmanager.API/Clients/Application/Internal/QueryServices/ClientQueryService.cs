@@ -15,5 +15,10 @@ namespace sweetmanager.API.Clients.Application.Internal.QueryServices
         {
             return await clientRepository.FindByIdAsync(query.Id);
         }
+
+        public async Task<Client?> Handle(GetClientByEmailQuery query)
+        {
+            return await clientRepository.FindByEmailAsync(query.Email);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using sweetmanager.API.Clients.Domain.Model.Commands;
+﻿using System.ComponentModel.DataAnnotations;
+using sweetmanager.API.Clients.Domain.Model.Commands;
 
 namespace sweetmanager.API.Clients.Domain.Model.Aggregates
 {
@@ -6,13 +7,27 @@ namespace sweetmanager.API.Clients.Domain.Model.Aggregates
     public partial class Client
     {
         public int Id { get; private set; }
-        public string? Name { get; private set; }
-        public string? LastName { get; private set; }
+        
+        [MaxLength(50)]
+        public string Name { get; private set; }
+        
+        [MaxLength(50)]
+        public string LastName { get; private set; }
+        
+        [Range(0, 120)]
         public int Age { get; private set; }
-        public string? Genre { get; private set; }
-        public int Phone { get; private set; }
-        public string? Email { get; private set; }
-        public string? State { get; private set; }
+        
+        [MaxLength(50)]
+        public string Genre { get; private set; }
+        
+        [MaxLength(50)]
+        public string Phone { get; private set; }
+        
+        [MaxLength(50)]
+        public string Email { get; private set; }
+        
+        [MaxLength(50)]
+        public string State { get; private set; }
 
         public Client()
         {
@@ -21,12 +36,12 @@ namespace sweetmanager.API.Clients.Domain.Model.Aggregates
             this.LastName = string.Empty;
             this.Age = 0;
             this.Genre = string.Empty;
-            this.Phone = 0;
+            this.Phone = "";
             this.Email = string.Empty;
             this.State = string.Empty;
         }
 
-        public Client(int id, string name, string lastName, int age, string genre, int phone, string email,
+        public Client(int id, string name, string lastName, int age, string genre, string phone, string email,
             string state)
         {
             this.Id = id;
@@ -41,7 +56,6 @@ namespace sweetmanager.API.Clients.Domain.Model.Aggregates
 
         public Client(CreateClientCommand command)
         {
-            this.Id = command.Id;
             this.Name = command.Name;
             this.LastName = command.LastName;
             this.Age = command.Age;
