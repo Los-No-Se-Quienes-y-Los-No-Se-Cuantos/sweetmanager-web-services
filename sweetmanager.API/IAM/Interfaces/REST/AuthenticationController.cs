@@ -17,9 +17,18 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     [AllowAnonymous]
     public async Task<IActionResult> SignUp([FromBody] SignUpResource resource)
     {
-        var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
-        await userCommandService.Handle(signUpCommand);
-        return Ok( new { message = "User created successfully" });
+        try
+        {
+            var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+            await userCommandService.Handle(signUpCommand);
+
+            return Ok(new { message = "User created successfully" });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost("sign-in")]

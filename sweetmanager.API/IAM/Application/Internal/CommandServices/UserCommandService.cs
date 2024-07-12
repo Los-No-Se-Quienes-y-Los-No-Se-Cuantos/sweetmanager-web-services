@@ -16,14 +16,17 @@ public class UserCommandService(
 {
     public async Task Handle(SignUpCommand command)
     {
-        if (userRepository.ExistsByUsername(command.Username))
-            throw new Exception($"Username {command.Username} is already taken");
+        if (userRepository.ExistsByEmail(command.Email))
+            throw new Exception($"Email {command.Email} is already taken");
         
         var hashedPassword = hashingService.HashPassword(command.Password);
-        var user = new User(command.Username, hashedPassword);
+        
+        var user = new User(command.UserName, hashedPassword, command.Email);
+        
         try
         {
             await userRepository.AddAsync(user);
+            
             await unitOfWork.CompleteAsync();
         }
         catch (Exception e)
@@ -34,10 +37,10 @@ public class UserCommandService(
 
     public async Task<(User user, string token)> Handle(SignInCommand command)
     {
-        var user = await userRepository.FindByUsernameAsync(command.Username);
+        var user = await userRepository.FindByEmailAsync(command.Email);
         
         if (user is null || !hashingService.VerifyPassword(command.Password, user.PasswordHash))
-            throw new Exception("Invalid username or password");
+            throw new Exception("Invalid email or password");
 
         var token = tokenService.GenerateToken(user);
 

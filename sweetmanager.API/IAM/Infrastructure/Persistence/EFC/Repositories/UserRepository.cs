@@ -8,13 +8,13 @@ namespace sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories;
 
 public class UserRepository(AppDbContext context) : BaseRepository<User>(context), IUserRepository
 {
-    public async Task<User?> FindByUsernameAsync(string username)
+    public async Task<User?> FindByEmailAsync(string email)
     {
-        return await Context.Set<User>().FirstOrDefaultAsync(user => user.Username.Equals(username));
+        return await Context.Set<User>().FirstOrDefaultAsync(user => user.Email.Equals(email));
     }
 
-    public bool ExistsByUsername(string username)
+    public bool ExistsByEmail(string email)
     {
-        return Context.Set<User>().Any(user => user.Username.Equals(username));
+        return Context.Set<User>().Any(user => user.Email.Equals(email));
     }
 }

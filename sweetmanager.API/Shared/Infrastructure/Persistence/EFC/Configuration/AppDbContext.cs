@@ -174,7 +174,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<User>().Property(u => u.Username).IsRequired();
         builder.Entity<User>().Property(u => u.PasswordHash).IsRequired();
-        
+        builder.Entity<User>().Property(u => u.Email).IsRequired();
         
         // Apply SnakeCase Naming Convention
         

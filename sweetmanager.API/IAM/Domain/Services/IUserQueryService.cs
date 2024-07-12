@@ -6,6 +6,8 @@ namespace sweetmanager.API.IAM.Domain.Services;
 public interface IUserQueryService
 {
     Task<User?> Handle(GetUserByIdQuery query);
-    Task<User?> Handle(GetUserByUsernameQuery query);
+    
+    Task<User?> Handle(GetUserByEmailQuery query);
+    
     Task<IEnumerable<User>> Handle(GetAllUsersQuery query);
 }
