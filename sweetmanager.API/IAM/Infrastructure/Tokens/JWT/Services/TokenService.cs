@@ -16,7 +16,9 @@ public class TokenService(IOptions<TokenSettings> tokenSettings) : ITokenService
     public string GenerateToken(User user)
     {
         var secret = _tokenSettings.Secret;
+        
         var key = Encoding.ASCII.GetBytes(secret);
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new []
