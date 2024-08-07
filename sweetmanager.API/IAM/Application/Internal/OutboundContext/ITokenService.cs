@@ -4,7 +4,7 @@ namespace sweetmanager.API.IAM.Application.Internal.OutboundContext;
 
 public interface ITokenService
 {
-    string GenerateToken(User user);
+    string GenerateToken(dynamic user);
     
-    Task<int?> ValidateToken(string token);
+    dynamic? ValidateToken(string? token);
 }
