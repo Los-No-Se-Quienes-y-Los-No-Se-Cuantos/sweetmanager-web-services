@@ -1,7 +1,8 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.IAM.Domain.Services;
-using sweetmanager.API.IAM.Infrastructure.Pipiline.Middleware.Attributes;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials;
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using sweetmanager.API.IAM.Interfaces.REST.Resources;
 using sweetmanager.API.IAM.Interfaces.REST.Transform;
 
@@ -11,7 +12,7 @@ namespace sweetmanager.API.IAM.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class AuthenticationController(IUserCommandService userCommandService) : ControllerBase
+public class AuthenticationController(IUserCommandService userCommandService, IUserCredentialCommandService userCredentialCommandService) : ControllerBase
 {
     [HttpPost("sign-up")]
     [AllowAnonymous]
@@ -21,8 +22,13 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
         {
             var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
 
-            await userCommandService.Handle(signUpCommand);
-
+            var result = await userCommandService.Handle(signUpCommand);
+            
+            if(result is null)
+                return BadRequest("An error occurred while creating the user");
+            
+            await userCredentialCommandService.Handle(new(result.Id, resource.Password));
+            
             return Ok(new { message = "User created successfully" });
         }
         catch (Exception e)
@@ -35,11 +41,22 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     [AllowAnonymous]
     public async Task<IActionResult> SignIn([FromBody] SignInResource resource)
     {
-        var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
-        var authenticatedUser = await userCommandService.Handle(signInCommand);
-        var authenticatedUserResource =
-            AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser.user,
-                authenticatedUser.token);
-        return Ok(authenticatedUserResource);
+        try
+        {
+            var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+            var authenticatedUser = await userCommandService.Handle(signInCommand);
+
+            var authenticatedUserResource =
+                AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser.user,
+                    authenticatedUser.token);
+
+            return Ok(authenticatedUserResource);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        
     }
 }
