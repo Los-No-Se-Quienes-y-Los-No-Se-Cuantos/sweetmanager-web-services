@@ -1,16 +1,17 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.IAM.Domain.Model.Queries;
 using sweetmanager.API.IAM.Domain.Services;
-using sweetmanager.API.IAM.Infrastructure.Pipiline.Middleware.Attributes;
 using sweetmanager.API.IAM.Interfaces.REST.Transform;
 
 namespace sweetmanager.API.IAM.Interfaces.REST;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class UsersController(IUserQueryService userQueryService) : ControllerBase
+public class UserController(IUserQueryService userQueryService) : ControllerBase
 {
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetUserById(int id)
