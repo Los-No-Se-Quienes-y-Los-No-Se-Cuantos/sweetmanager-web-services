@@ -5,7 +5,7 @@ using sweetmanager.API.IAM.Domain.Services;
 
 namespace sweetmanager.API.IAM.Application.Internal.QueryServices;
 
-public class UserQueryService(IUserRepository userRepository) : IUserQueryService
+internal class UserQueryService(IUserRepository userRepository) : IUserQueryService
 {
     public async Task<User?> Handle(GetUserByIdQuery query)
     {
