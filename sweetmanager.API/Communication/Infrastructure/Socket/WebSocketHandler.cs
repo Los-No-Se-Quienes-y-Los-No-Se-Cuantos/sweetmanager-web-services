@@ -5,18 +5,22 @@ using sweetmanager.API.Communication.Domain.Services;
 
 namespace sweetmanager.API.Communication.Infrastructure.Socket;
 
+// IWebSocketHandler handles WebSocket connections and messages
 public class WebSocketHandler : IWebSocketHandler
 {
-    private static readonly ConcurrentDictionary<string, List<WebSocket>> _rooms = new();
+    // Stores all active WebSocket connections grouped by Room Name
+    private static readonly ConcurrentDictionary<string, List<WebSocket>> Rooms = new();
     
+    // This method handles a new WebSocket Request
     public async Task HandleWebSocketAsync(HttpContext context)
     {
         if (context.WebSockets.IsWebSocketRequest)
         {
-            WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
             string? room = context.Request.Query["room"];
 
+            // If there is no room name in the query string, close the connection
             if (string.IsNullOrEmpty(room))
             {
                 await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room name is required", CancellationToken.None);
@@ -24,16 +28,19 @@ public class WebSocketHandler : IWebSocketHandler
                 return;
             }
 
-            _rooms.AddOrUpdate(room, [webSocket], (key, oldValue) =>
+            // Add the WebSocket connection to the corresponding room in the Rooms dictionary
+            Rooms.AddOrUpdate(room, [webSocket], (key, oldValue) =>
             {
                 oldValue.Add(webSocket);
 
                 return oldValue;
             });
 
+            // Start receiving messages from the WebSocket
             await ReceiveMessages(webSocket, room);
 
-            _rooms[room].Remove(webSocket);
+            // Remove the WebSocket connection from the room when the connection is closed
+            Rooms[room].Remove(webSocket);
 
             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by the WebSocketHandler", CancellationToken.None);
         }
@@ -43,33 +50,39 @@ public class WebSocketHandler : IWebSocketHandler
         }
     }
     
-    private async Task ReceiveMessages(WebSocket webSocket, string room)
+    private static async Task ReceiveMessages(WebSocket webSocket, string room)
     {
+        // Buffer to store the received message  and reduces the number of I/O Operations (Read a chunk of data at once)
         var buffer = new byte[1024 * 4];
 
-        WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
+        // Keep receiving messages until the WebSocket connection is closed
         while (!result.CloseStatus.HasValue)
         {
+            // Convert the received message to a string
             var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
+            // Send the message to all other WebSocket connections in the same room except for the sender
             await BroadcastMessage(message, webSocket, room);
 
             result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
         }
     }
     
-    private async Task BroadcastMessage(string message, WebSocket senderWebSocket, string room)
+    private static async Task BroadcastMessage(string message, WebSocket senderWebSocket, string room)
     {
+        // Convert in Bytes the message to be sent
         var messageBuffer = Encoding.UTF8.GetBytes(message);
 
-        if (_rooms.TryGetValue(room, out var sockets))
+        // First check if the room exists in the Rooms dictionary
+        if (Rooms.TryGetValue(room, out var sockets))
         {
-            foreach (var socket in sockets)
+            // Send the message to all other WebSocket connections in the same room except for the sender
+            foreach (var socket in sockets.Where(socket => socket != senderWebSocket && socket.State == WebSocketState.Open))
             {
-                if (socket != senderWebSocket && socket.State == WebSocketState.Open)
-                    await socket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
-
+                // Send the message to the WebSocket connection
+                await socket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
             }
         }
     }
