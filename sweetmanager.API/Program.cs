@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using sweetmanager.API.Clients.Application.Internal.CommandServices;
 using sweetmanager.API.Clients.Application.Internal.QueryServices;
@@ -23,8 +26,12 @@ using sweetmanager.API.IAM.Application.Internal.OutboundContext;
 using sweetmanager.API.IAM.Application.Internal.QueryServices;
 using sweetmanager.API.IAM.Domain.Repositories;
 using sweetmanager.API.IAM.Domain.Services;
+using sweetmanager.API.IAM.Domain.Services.Roles;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials;
 using sweetmanager.API.IAM.Infrastructure.Hashing.BCrypt.Services;
 using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Extensions;
+using sweetmanager.API.IAM.Infrastructure.Poblation.Roles;
 using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Configuration;
 using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Services;
 using sweetmanager.API.IAM.Interfaces.ACL;
@@ -52,9 +59,13 @@ using sweetmanager.API.Supply.Infrastructure.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddControllers( options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
+
+
+#region Database Configuration
 // Add Database Connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -81,8 +92,9 @@ builder.Services.AddDbContext<AppDbContext>(
                     .EnableDetailedErrors();    
     });
 
+#endregion
 
-
+#region OPENAPI Configuration
 // Configure Lowercase URLs
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -133,7 +145,11 @@ builder.Services.AddSwaggerGen(
         });
     });
 
-// Configure Dependency Injection
+#endregion
+
+builder.Services.AddHttpContextAccessor();
+
+#region Injection Configuration for Every Bounded Context
 
 // Rooms Bounded Context Injection Configuration
 builder.Services.AddScoped<IBedroomCommandService, BedroomCommandService>();
@@ -183,11 +199,62 @@ builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 builder.Services.AddScoped<IHashingService, HashingServices>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleCommandService, RoleCommandService>();
+builder.Services.AddScoped<IRoleQueryService, RoleQueryService>();
+builder.Services.AddScoped<IUserCredentialRepository, UserCredentialRepository>();
+builder.Services.AddScoped<IUserCredentialCommandService, UserCredentialCommandService>();
+builder.Services.AddScoped<IUserCredentialQueryService, UserCredentialQueryService>();
+builder.Services.AddScoped<DatabaseInitializer>();
+
+#endregion
+
+#region TOKEN CONFIGURATION
+
+var tokenSettings = builder.Configuration.GetSection("TokenSettings");
+
+builder.Services.Configure<TokenSettings>(tokenSettings);
+
+var secretKey = tokenSettings["Secret"];
+
+var audience = tokenSettings["Audience"];
+
+var issuer = tokenSettings["Issuer"];
+
+var securityKey = !string.IsNullOrEmpty(secretKey)
+    ? new SymmetricSecurityKey(Encoding.Default.GetBytes(secretKey))
+    : throw new ArgumentException("Secret key is null or empty");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = securityKey,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+
+builder.Services.AddTransient<TokenValidationHandler>();
+
+builder.Services.AddAuthorization();
+
+#endregion
 
 var app = builder.Build();
 
+#region Ensure Database Created (COMPILE AppDbContext)
 // Verify Database Objects are created
 using (var scope = app.Services.CreateScope())
 {
@@ -195,6 +262,17 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
+
+#endregion
+
+#region Run DatabaseInitializer
+using (var scope = app.Services.CreateScope())
+{
+    var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+
+    initializer.InitializeAsync().Wait();
+}
+#endregion
 
 #region ConfigurationSocket
 
@@ -222,7 +300,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
+app.UseRequestAuthorization();
+
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
