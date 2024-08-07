@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using sweetmanager.API.Rooms.Domain.Model.Queries;
 using sweetmanager.API.Rooms.Domain.Services;
 using sweetmanager.API.Rooms.Interfaces.REST.Resources;
@@ -7,6 +8,7 @@ using sweetmanager.API.Rooms.Interfaces.REST.Transform;
 
 namespace sweetmanager.API.Rooms.Interfaces.REST;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]

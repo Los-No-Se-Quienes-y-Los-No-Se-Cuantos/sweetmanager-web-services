@@ -4,9 +4,11 @@ using sweetmanager.API.Clients.Domain.Services;
 using sweetmanager.API.Clients.Interfaces.REST.Resources;
 using sweetmanager.API.Clients.Interfaces.REST.Transform;
 using System.Net.Mime;
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace sweetmanager.API.Clients.Interfaces
 {
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]

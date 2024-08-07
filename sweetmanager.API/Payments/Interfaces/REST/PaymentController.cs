@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using sweetmanager.API.Payments.Domain.Model.Queries;
 using sweetmanager.API.Payments.Domain.Services;
 using sweetmanager.API.Payments.Interfaces.REST.Resources;
@@ -7,6 +8,7 @@ using sweetmanager.API.Payments.Interfaces.REST.Transforms;
 
 namespace sweetmanager.API.Payments.Interfaces.REST;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
@@ -21,10 +23,8 @@ public class PaymentController(IPaymentCommandService commandService, IPaymentQu
         var payment = await commandService.Handle(CreatePaymentCommandFromResourceAssembler.ToCommandFromResource(resource));
             
         return CreatedAtAction(nameof(GetPaymentById), new { paymentId = payment.Id }, payment);
-        
-        
     }
-    
+
     private async Task<IActionResult> GetAllPayments()
     {
         var payments = await queryService.Handle(new GetAllPaymentsQuery());
