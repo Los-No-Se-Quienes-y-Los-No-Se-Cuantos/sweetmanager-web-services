@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using sweetmanager.API.Clients.Domain.Model.Aggregates;
 using sweetmanager.API.Communication.Domain.Model.Aggregates;
 using sweetmanager.API.IAM.Domain.Model.Aggregates;
+using sweetmanager.API.IAM.Domain.Model.Entities;
 using sweetmanager.API.Payments.Domain.Model.Aggregates;
 using sweetmanager.API.Payments.Domain.Model.ValueObjects;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
@@ -173,8 +174,26 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<User>().HasKey(u => u.Id);
         builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<User>().Property(u => u.Username).IsRequired();
-        builder.Entity<User>().Property(u => u.PasswordHash).IsRequired();
         builder.Entity<User>().Property(u => u.Email).IsRequired();
+        // Will save the Role id in the Database because is a one-to-many relationship
+        builder.Entity<User>().HasOne(u => u.Role).WithMany();
+        builder.Entity<Role>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(r => r.Name).IsRequired().HasConversion<string>();
+        });
+
+        builder.Entity<UserCredential>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd(); // Value Generated Never
+            entity.Property(u => u.UserId).IsRequired();
+            entity.Property(u => u.Argon2IdUserHash).IsRequired();
+            entity.HasOne(u => u.User).WithOne(a => a.UserCredential)
+                .HasForeignKey<UserCredential>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
         
         // Apply SnakeCase Naming Convention
         
