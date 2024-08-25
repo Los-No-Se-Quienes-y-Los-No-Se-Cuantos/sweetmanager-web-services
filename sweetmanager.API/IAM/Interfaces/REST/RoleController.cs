@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.IAM.Domain.Model.Queries;
 using sweetmanager.API.IAM.Domain.Services.Roles;
 using sweetmanager.API.IAM.Interfaces.REST.Transform;
+using sweetmanager.API.IAM.Interfaces.REST.Transform.Authentication;
 
 namespace sweetmanager.API.IAM.Interfaces.REST;
 

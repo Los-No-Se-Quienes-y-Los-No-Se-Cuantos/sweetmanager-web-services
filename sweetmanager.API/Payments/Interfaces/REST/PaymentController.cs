@@ -15,7 +15,6 @@ namespace sweetmanager.API.Payments.Interfaces.REST;
 public class PaymentController(IPaymentCommandService commandService, IPaymentQueryService queryService)
     : ControllerBase
 {
-    
     [HttpPost]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentResource resource)
     {

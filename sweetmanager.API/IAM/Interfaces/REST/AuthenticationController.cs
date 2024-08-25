@@ -1,10 +1,19 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using sweetmanager.API.IAM.Domain.Model.ValueObjects;
 using sweetmanager.API.IAM.Domain.Services;
 using sweetmanager.API.IAM.Domain.Services.UserCredentials;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials.Administration;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials.Work;
+using sweetmanager.API.IAM.Domain.Services.Users.Administration;
+using sweetmanager.API.IAM.Domain.Services.Users.Work;
 using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
-using sweetmanager.API.IAM.Interfaces.REST.Resources;
-using sweetmanager.API.IAM.Interfaces.REST.Transform;
+using sweetmanager.API.IAM.Interfaces.REST.Resources.Authentication;
+using sweetmanager.API.IAM.Interfaces.REST.Resources.Authentication.Administration;
+using sweetmanager.API.IAM.Interfaces.REST.Resources.Authentication.Work;
+using sweetmanager.API.IAM.Interfaces.REST.Transform.Administration;
+using sweetmanager.API.IAM.Interfaces.REST.Transform.Authentication;
+using sweetmanager.API.IAM.Interfaces.REST.Transform.Work;
 
 namespace sweetmanager.API.IAM.Interfaces.REST;
 
@@ -12,28 +21,50 @@ namespace sweetmanager.API.IAM.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class AuthenticationController(IUserCommandService userCommandService, IUserCredentialCommandService userCredentialCommandService) : ControllerBase
+public class AuthenticationController(
+    IAdministratorCommandService administratorCommandService,
+    IAdministratorCredentialCommandService administratorCredentialCommandService,
+    IWorkerCommandService workerCommandService,
+    IWorkerCredentialCommandService workerCredentialCommandService) : ControllerBase
 {
-    [HttpPost("sign-up")]
+    
+    [HttpPost("sign-up-administrator")]
     [AllowAnonymous]
-    public async Task<IActionResult> SignUp([FromBody] SignUpResource resource)
+    public async Task<IActionResult> SignUpAdministrator([FromBody] SignUpAdministratorResource resource)
     {
         try
         {
-            var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
+            var signUpCommand = SignUpAdministratorCommandFromResourceAssembler.ToCommandFromResource(resource);
 
-            var result = await userCommandService.Handle(signUpCommand);
+            var result = await administratorCommandService.Handle(signUpCommand);
             
-            if(result is null)
-                return BadRequest("An error occurred while creating the user");
-            
-            await userCredentialCommandService.Handle(new(result.Id, resource.Password));
-            
-            return Ok(new { message = "User created successfully" });
+            await administratorCredentialCommandService.Handle(new(result, resource.Password));
+
+            return Ok("User created successfully");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return BadRequest(e.Message);
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("sign-up-worker")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SignUpWorker([FromBody] SignUpWorkerResource resource)
+    {
+        try
+        {
+            var signUpCommand = SignUpWorkerCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+            var result = await workerCommandService.Handle(signUpCommand);
+
+            await workerCredentialCommandService.Handle(new(result!.Id, resource.Password));
+
+            return Ok("User created successfully");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 
@@ -43,20 +74,27 @@ public class AuthenticationController(IUserCommandService userCommandService, IU
     {
         try
         {
+            if (!Enum.TryParse(resource.Role, out ERoles roles))
+                return BadRequest("Role must exist!");
+
             var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
+             
+            dynamic? authenticatedUser;
 
-            var authenticatedUser = await userCommandService.Handle(signInCommand);
-
+            if (roles == ERoles.ROLE_MANAGER)
+                authenticatedUser=  await administratorCommandService.Handle(signInCommand);
+            else
+                authenticatedUser = await workerCommandService.Handle(signInCommand);
+            
             var authenticatedUserResource =
-                AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser.user,
-                    authenticatedUser.token);
-
+                AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser!.User,
+                    authenticatedUser.Token);
+            
             return Ok(authenticatedUserResource);
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
-        
     }
 }

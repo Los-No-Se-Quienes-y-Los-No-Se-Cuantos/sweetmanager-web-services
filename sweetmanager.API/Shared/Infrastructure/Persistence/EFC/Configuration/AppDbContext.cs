@@ -2,10 +2,13 @@ using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using sweetmanager.API.Clients.Domain.Model.Aggregates;
 using sweetmanager.API.Communication.Domain.Model.Aggregates;
-using sweetmanager.API.IAM.Domain.Model.Aggregates;
-using sweetmanager.API.IAM.Domain.Model.Entities;
+using sweetmanager.API.IAM.Domain.Model.Aggregates.Management;
+using sweetmanager.API.IAM.Domain.Model.Aggregates.Work;
+using sweetmanager.API.IAM.Domain.Model.Entities.Credential;
+using sweetmanager.API.IAM.Domain.Model.Entities.Roles.Standard;
+using sweetmanager.API.IAM.Domain.Model.Entities.Roles.SupervisionAreas;
+using sweetmanager.API.IAM.Domain.Model.Entities.Roles.WorkerAreas;
 using sweetmanager.API.Payments.Domain.Model.Aggregates;
-using sweetmanager.API.Payments.Domain.Model.ValueObjects;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using sweetmanager.API.Subscriptions.Domain.Model.Aggregates;
@@ -26,17 +29,17 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(builder);
 
         // Monitoring Context
-        
+
         builder.Entity<Bedroom>(entity =>
         {
             entity.HasKey(e => e.Id);
 
             entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
-            
+
             entity.Property(e => e.TypeBedroom).IsRequired().HasConversion<string>();
-            
+
             entity.Property(e => e.BedroomStatus).IsRequired().HasConversion<string>();
-            
+
             entity.OwnsOne(e => e.Information, i =>
             {
                 i.WithOwner().HasForeignKey("Id");
@@ -77,7 +80,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 i.Property(d => d.Discount).HasColumnName("Discount");
                 i.Property(d => d.TotalPrice).HasColumnName("TotalPrice");
             });
-            
+
             entity.Property(e => e.BookingStatus)
                 .HasColumnName("state")
                 .IsRequired()
@@ -135,7 +138,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Email).IsRequired();
             entity.Property(c => c.State).IsRequired();
         });
-        
+
         builder.Entity<Notification>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -143,7 +146,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Title).IsRequired();
             entity.Property(c => c.Message).IsRequired();
         });
-        
+
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -168,13 +171,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
         });
-        
-        // IAM Context
 
-        builder.Entity<User>().HasKey(u => u.Id);
+        // IAM Context
+        
+        /*builder.Entity<User>().HasKey(u => u.Id);
         builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<User>().Property(u => u.Username).IsRequired();
-        builder.Entity<User>().Property(u => u.Email).IsRequired();
+        builder.Entity<User>().Property(u => u.Username).IsRequired().HasMaxLength(25);
+        builder.Entity<User>().Property(u => u.Email).IsRequired().HasMaxLength(35);
         // Will save the Role id in the Database because is a one-to-many relationship
         builder.Entity<User>().HasOne(u => u.Role).WithMany();
         builder.Entity<Role>(entity =>
@@ -182,17 +185,99 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasKey(r => r.Id);
             entity.Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
             entity.Property(r => r.Name).IsRequired().HasConversion<string>();
+        });*/
+
+        builder.Entity<Role>(a =>
+        {
+            a.HasKey(r => r.Id);
+            a.Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
+            a.Property(r => r.Name).IsRequired().HasConversion<string>();
         });
 
-        builder.Entity<UserCredential>(entity =>
+        builder.Entity<WorkerRole>(a =>
         {
-            entity.HasKey(u => u.Id);
-            entity.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd(); // Value Generated Never
-            entity.Property(u => u.UserId).IsRequired();
-            entity.Property(u => u.Argon2IdUserHash).IsRequired();
-            entity.HasOne(u => u.User).WithOne(a => a.UserCredential)
-                .HasForeignKey<UserCredential>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            a.HasKey(r => r.Id);
+            a.Property(r => r.Id).IsRequired().ValueGeneratedOnAdd();
+            a.Property(r => r.Role).IsRequired().HasConversion<string>();
+        });
+
+        builder.Entity<AdministratorWorkerRole>(a =>
+        {
+            a.HasKey(mwr => new { mwr.AdministratorId, mwr.WorkerRoleId });
+            a.HasOne(mwr => mwr.Administrator)
+                .WithMany(c => c.SupervisionAreaManagerWorkerRoles)
+                .HasForeignKey(mwr => mwr.AdministratorId);
+
+            a.HasOne(r => r.WorkerRole)
+                .WithMany(c => c.Administrators)
+                .HasForeignKey(mwr => mwr.WorkerRoleId);
+        });
+        
+        builder.Entity<Administrator>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+            entity.Property(m => m.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(u => u.Username).IsRequired();
+            entity.Property(u => u.Email).IsRequired();
+            entity.Property(u => u.AccountStatus).IsRequired().HasMaxLength(15);
+            entity.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(20);
+            // Will save the Role id in the Database because is a one-to-many relationship
+            entity.HasOne(u => u.Role).WithMany();
+            entity.OwnsOne(e => e.Name, n =>
+            {
+                n.WithOwner().HasForeignKey("Id");
+                n.Property(c => c.Name).HasColumnName("Name");
+                n.Property(c => c.Surname).HasColumnName("Surname");
+            });
+        });
+        
+        builder.Entity<Worker>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+            entity.Property(m => m.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(u => u.Username).IsRequired();
+            entity.Property(u => u.Email).IsRequired();
+            // entity.Property(u => u.RoleArea).IsRequired().HasConversion<string>(); // Less Efficiency, better readable database
+            entity.Property(u => u.ActiveAccount).IsRequired();
+            entity.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(20);
+            entity.Property(u => u.RoleArea).IsRequired();
+            entity.HasOne(w => w.WorkArea)
+                .WithMany(wr => wr.Workers)
+                .HasForeignKey(w => w.RoleArea);
+            entity.OwnsOne(e => e.Name, n =>
+            {
+                n.WithOwner().HasForeignKey("Id");
+                n.Property(c => c.Name).HasColumnName("Name");
+                n.Property(c => c.Surname).HasColumnName("Surname");
+            });
+            
+            // Will save the Role id in the Database because is a one-to-many relationship
+            entity.HasOne(u => u.Role).WithMany();
+            
+        });
+
+        builder.Entity<WorkerCredential>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(e => e.WorkerId).IsRequired();
+            entity.Property(e => e.Argon2IdUserHash).IsRequired().HasMaxLength(50);
+
+            entity.HasOne(w => w.Worker).WithOne(p => p.WorkerCredential)
+                .HasForeignKey<WorkerCredential>(wc => wc.WorkerId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_worker_credentials_worker_id");
+        });
+
+        builder.Entity<AdministratorCredential>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(e => e.AdminId).IsRequired();
+            entity.Property(e => e.Argon2IdUserHash).IsRequired().HasMaxLength(50);
+
+            entity.HasOne(a => a.Admin).WithOne(wc => wc.AdministratorCredential)
+                .HasForeignKey<AdministratorCredential>(ac => ac.AdminId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_admin_credentials_admin_id");
         });
         
         // Apply SnakeCase Naming Convention

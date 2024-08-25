@@ -1,13 +1,15 @@
 using sweetmanager.API.IAM.Application.Internal.OutboundContext;
 using sweetmanager.API.IAM.Domain.Model.Queries;
 using sweetmanager.API.IAM.Domain.Services;
+using sweetmanager.API.IAM.Domain.Services.Users.Administration;
+using sweetmanager.API.IAM.Domain.Services.Users.Work;
 using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Components;
 
 public class RequestAuthorizationMiddleware(RequestDelegate next, ILogger<RequestAuthorizationMiddleware>logger)
 {
-    public async Task InvokeAsync(HttpContext context, IUserQueryService userQueryService, ITokenService tokenService)
+    public async Task InvokeAsync(HttpContext context, IAdministratorQueryService administratorQueryService, IWorkerQueryService workerQueryService, ITokenService tokenService)
     {
         var endpoint = context.Request.HttpContext.GetEndpoint();
         
@@ -31,14 +33,12 @@ public class RequestAuthorizationMiddleware(RequestDelegate next, ILogger<Reques
         dynamic? validation = null;
         
         // Only if I have more than 1 Aggregate 
-        /*if (tokenResult.Role == "ROLE_MANAGER")
-            validation = await userQueryService.Handle(new GetUserByIdQuery(tokenResult.Id));
+        if (tokenResult.Role == "ROLE_MANAGER")
+            validation = await administratorQueryService.Handle(new GetUserByIdQuery(tokenResult.Id));
         
-        else if(tokenResult.Role == "ROLE_WORKER")
-            validation = await userQueryService.Handle(new GetUserByIdQuery(tokenResult.Id));*/
-
-        validation = await userQueryService.Handle(new GetUserByIdQuery(tokenResult.Id));
-
+        else if (tokenResult.Role == "ROLE_WORKER")
+            validation = await workerQueryService.Handle(new GetUserByIdQuery(tokenResult.Id));
+        
         if (validation is null)
             throw new Exception("Invalid credentials!");
 

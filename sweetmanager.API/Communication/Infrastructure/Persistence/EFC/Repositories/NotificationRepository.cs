@@ -6,7 +6,7 @@ using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 namespace sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 
-public class NotificationRepository(AppDbContext context) : BaseRepository<Notification>(context), INotificationRepository
+internal class NotificationRepository(AppDbContext context) : BaseRepository<Notification>(context), INotificationRepository
 {
     public Task<Notification?> FindNotificationByIdAsync(int id)
     {

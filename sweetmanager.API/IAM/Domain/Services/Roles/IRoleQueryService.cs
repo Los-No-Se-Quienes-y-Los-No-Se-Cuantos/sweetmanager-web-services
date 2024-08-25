@@ -1,5 +1,4 @@
-﻿using sweetmanager.API.IAM.Domain.Model.Entities;
-
+﻿using sweetmanager.API.IAM.Domain.Model.Entities.Roles.Standard;
 using sweetmanager.API.IAM.Domain.Model.Queries;
 
 namespace sweetmanager.API.IAM.Domain.Services.Roles;

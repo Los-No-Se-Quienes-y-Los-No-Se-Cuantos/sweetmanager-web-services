@@ -42,6 +42,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Communication\Domain\Model\Commands\Chat\" />
+      <Folder Include="Communication\Domain\Model\Exceptions\" />
       <Folder Include="IAM\Interfaces\" />
     </ItemGroup>
 

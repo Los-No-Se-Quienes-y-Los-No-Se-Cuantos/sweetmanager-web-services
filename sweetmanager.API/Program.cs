@@ -21,15 +21,26 @@ using sweetmanager.API.Communication.Domain.Repositories;
 using sweetmanager.API.Communication.Domain.Services;
 using sweetmanager.API.Communication.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Communication.Infrastructure.Socket;
-using sweetmanager.API.IAM.Application.Internal.CommandServices;
+using sweetmanager.API.IAM.Application.Internal.CommandServices.Credential;
+using sweetmanager.API.IAM.Application.Internal.CommandServices.Roles;
+using sweetmanager.API.IAM.Application.Internal.CommandServices.Users;
 using sweetmanager.API.IAM.Application.Internal.OutboundContext;
-using sweetmanager.API.IAM.Application.Internal.QueryServices;
+using sweetmanager.API.IAM.Application.Internal.QueryServices.Credential;
+using sweetmanager.API.IAM.Application.Internal.QueryServices.Roles;
+using sweetmanager.API.IAM.Application.Internal.QueryServices.Users;
 using sweetmanager.API.IAM.Domain.Repositories;
-using sweetmanager.API.IAM.Domain.Services;
+using sweetmanager.API.IAM.Domain.Repositories.Credential;
+using sweetmanager.API.IAM.Domain.Repositories.Roles;
+using sweetmanager.API.IAM.Domain.Repositories.Users;
 using sweetmanager.API.IAM.Domain.Services.Roles;
-using sweetmanager.API.IAM.Domain.Services.UserCredentials;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials.Administration;
+using sweetmanager.API.IAM.Domain.Services.UserCredentials.Work;
+using sweetmanager.API.IAM.Domain.Services.Users.Administration;
+using sweetmanager.API.IAM.Domain.Services.Users.Work;
 using sweetmanager.API.IAM.Infrastructure.Hashing.BCrypt.Services;
-using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories.Credential;
+using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories.Roles;
+using sweetmanager.API.IAM.Infrastructure.Persistence.EFC.Repositories.Users;
 using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Extensions;
 using sweetmanager.API.IAM.Infrastructure.Poblation.Roles;
 using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Configuration;
@@ -62,7 +73,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers( options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-
 
 
 #region Database Configuration
@@ -194,17 +204,30 @@ builder.Services.AddScoped<IClientsContextFacade, ClientsContextFacade>();
 
 // IAM Bounded Context Injection Configuration
 
-builder.Services.AddScoped<IUserCommandService, UserCommandService>();
-builder.Services.AddScoped<IUserQueryService, UserQueryService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 builder.Services.AddScoped<IHashingService, HashingServices>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleCommandService, RoleCommandService>();
 builder.Services.AddScoped<IRoleQueryService, RoleQueryService>();
-builder.Services.AddScoped<IUserCredentialRepository, UserCredentialRepository>();
-builder.Services.AddScoped<IUserCredentialCommandService, UserCredentialCommandService>();
-builder.Services.AddScoped<IUserCredentialQueryService, UserCredentialQueryService>();
+builder.Services.AddScoped<IWorkerCredentialRepository, WorkerCredentialRepository>();
+builder.Services.AddScoped<IAdministratorCredentialRepository, AdministratorCredentialRepository>();
+builder.Services.AddScoped<IAdministratorCredentialCommandService, AdministratorCredentialCommandService>();
+builder.Services.AddScoped<IAdministratorCredentialQueryService, AdministratorCredentialQueryService>();
+builder.Services.AddScoped<IWorkerCredentialRepository, WorkerCredentialRepository>();
+builder.Services.AddScoped<IWorkerCredentialCommandService, WorkerCredentialCommandService>();
+builder.Services.AddScoped<IWorkerCredentialQueryService, WorkerCredentialQueryService>();
+builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+builder.Services.AddScoped<IAdministratorCommandService, AdministratorCommandService>();
+builder.Services.AddScoped<IAdministratorQueryService, AdministratorQueryService>();
+builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
+builder.Services.AddScoped<IWorkerCommandService, WorkerCommandService>();
+builder.Services.AddScoped<IWorkerQueryService, WorkerQueryService>();
+builder.Services.AddScoped<IWorkerRoleCommandService, WorkerRoleCommandService>();
+builder.Services.AddScoped<IWorkerRoleQueryService, WorkerRoleQueryService>();
+builder.Services.AddScoped<IManagerWorkerRoleCommandService, ManagerWorkerRoleCommandService>();
+builder.Services.AddScoped<IManagerWorkerRoleRepository, ManagerWorkerRoleRepository>();
+builder.Services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
+
 builder.Services.AddScoped<DatabaseInitializer>();
 
 #endregion
