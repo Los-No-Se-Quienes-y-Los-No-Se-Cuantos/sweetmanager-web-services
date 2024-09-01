@@ -40,6 +40,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(e => e.TypeBedroom).IsRequired().HasConversion<string>();
 
             entity.Property(e => e.BedroomStatus).IsRequired().HasConversion<string>();
+            
+            entity.Property(e => e.BedroomState).IsRequired().HasConversion<string>();
 
             entity.OwnsOne(e => e.Information, i =>
             {
