@@ -1,3 +1,5 @@
-﻿namespace sweetmanager.API.Reports.Domain.Model.Commands;
+﻿using sweetmanager.API.Reports.Domain.Model.ValueObjects;
 
-public record CreateReportCommand(string Title, string Content);
+namespace sweetmanager.API.Reports.Domain.Model.Commands;
+
+public record CreateReportCommand(string Title, string Content, string Image, EReportType ReportType);

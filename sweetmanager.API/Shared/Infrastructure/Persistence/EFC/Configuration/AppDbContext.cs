@@ -9,6 +9,7 @@ using sweetmanager.API.IAM.Domain.Model.Entities.Roles.Standard;
 using sweetmanager.API.IAM.Domain.Model.Entities.Roles.SupervisionAreas;
 using sweetmanager.API.IAM.Domain.Model.Entities.Roles.WorkerAreas;
 using sweetmanager.API.Payments.Domain.Model.Aggregates;
+using sweetmanager.API.Reports.Domain.Model.Aggregates;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using sweetmanager.API.Subscriptions.Domain.Model.Aggregates;
@@ -145,6 +146,16 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
             entity.Property(c => c.Title).IsRequired();
             entity.Property(c => c.Message).IsRequired();
+        });
+        
+        builder.Entity<Report>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(c => c.Title).IsRequired();
+            entity.Property(c => c.Content).IsRequired();
+            entity.Property(c => c.Image);
+            entity.Property(c => c.ReportType).IsRequired().HasConversion<string>();
         });
 
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>

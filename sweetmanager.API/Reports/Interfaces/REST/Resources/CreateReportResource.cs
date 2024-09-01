@@ -1,3 +1,5 @@
-﻿namespace sweetmanager.API.Reports.Interfaces.REST.Resources;
+﻿using sweetmanager.API.Reports.Domain.Model.ValueObjects;
 
-public record CreateReportResource();
+namespace sweetmanager.API.Reports.Interfaces.REST.Resources;
+
+public record CreateReportResource(string Title, string Content, string Image, EReportType ReportType);
