@@ -11,6 +11,8 @@ public class Bedroom
     public BedroomInformation Information { get; private set; }
     public ETypeBedroom TypeBedroom { get; private set; }
     public EBedroomStatus BedroomStatus { get; private set; }
+    
+    
 
     public BedroomPersonnelInformation Personnel { get; private set; }
     

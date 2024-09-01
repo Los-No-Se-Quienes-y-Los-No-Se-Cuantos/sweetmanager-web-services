@@ -7,6 +7,11 @@ using sweetmanager.API.Reports.Domain.Services;
 using sweetmanager.API.Reports.Interfaces.REST.Resources;
 using sweetmanager.API.Reports.Interfaces.REST.Transform;
 
+using Firebase.Storage;
+using Firebase.Auth;
+
+
+
 namespace sweetmanager.API.Reports.Interfaces.REST;
 
 [Authorize]
@@ -25,8 +30,10 @@ public class ReportController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateReport([FromBody] CreateReportResource resource)
+    public async Task<IActionResult> CreateReport([FromBody] CreateReportResource resource, IFormFile Image)
     {
+        Stream image = Image.OpenReadStream();
+        string url = await SubirStorage(image, Image.FileName);
         var report = await _reportCommandService.Handle(CreateReportCommandFromResourceAssembler.ToCommandFromResource(resource));
         return CreatedAtAction(nameof(GetReportById), new { reportId = report.Id }, report);
     }
@@ -57,5 +64,29 @@ public class ReportController : ControllerBase
     {
         var report = await _reportCommandService.Handle(new DeleteReportCommand(reportId));
         return Ok(ReportResourceFromEntityAssembler.ToResourceFromEntity(report));
+    }
+
+    public async Task<string> SubirStorage(Stream archivo, string nombre)
+    {
+        string email = "losnosequeylosnosecomo@gmail.com"; 
+        string password = "codigo123";
+        string path = "imagesfirebase-38e3b.appspot.com";
+        string apiKey = "AIzaSyC1X7tTKHyeZsZtM8Mv5IUryUs18KHNQQM";
+
+        var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+        var a = await auth.SignInWithEmailAndPasswordAsync(email, password);
+        
+        var cancellation = new CancellationTokenSource();
+
+        var task = new FirebaseStorage(path, new FirebaseStorageOptions
+            {
+                AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                ThrowOnCancel = true
+            }).Child("path")
+            .Child(nombre)
+            .PutAsync(archivo, cancellation.Token); 
+        
+        var downloadUrl = await task;
+        return downloadUrl;
     }
 }
