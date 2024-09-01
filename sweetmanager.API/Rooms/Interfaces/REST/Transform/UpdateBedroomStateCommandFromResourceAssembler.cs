@@ -10,8 +10,5 @@ public class UpdateBedroomStateCommandFromResourceAssembler
         return new UpdateBedroomStateCommand(resource.Id, resource.BedroomState);
     }
 
-    public static CreateBedroomCommand ToCommandFromResource(int resourceId, string resourceBedroomState)
-    {
-        throw new NotImplementedException();
-    }
+   
 }
