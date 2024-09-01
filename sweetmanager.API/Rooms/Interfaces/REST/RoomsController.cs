@@ -70,4 +70,25 @@ public class RoomsController(IBedroomCommandService bedroomCommandService,
 
         return Ok(bedroomResource);
     }
+    
+    public async Task<IActionResult> UpdateBedroomState([FromBody] UpdateBedroomStateResource resource)
+    {
+        if (resource == null)
+        {
+            return BadRequest("Invalid resource");
+        }
+
+        var command = UpdateBedroomStateCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var bedroom = await bedroomCommandService.Handle(command);
+
+        if (bedroom == null)
+        {
+            return BadRequest("Bedroom state not updated");
+        }
+
+        var bedroomResource = BedroomResourceFromEntityAssembler.ToResourceFromEntity(bedroom);
+        return Ok(bedroomResource);
+    }
+    
+
 }

@@ -8,4 +8,6 @@ public interface IBedroomCommandService
     Task<Bedroom?> Handle(CreateBedroomCommand command);
     
     Task<Bedroom?> Handle(UpdateBedroomCommand command);
+    
+    Task<Bedroom?> Handle(UpdateBedroomStateCommand command);
 }
