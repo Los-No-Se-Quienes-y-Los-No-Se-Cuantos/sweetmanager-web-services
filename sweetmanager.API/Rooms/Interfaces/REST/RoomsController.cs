@@ -71,6 +71,8 @@ public class RoomsController(IBedroomCommandService bedroomCommandService,
         return Ok(bedroomResource);
     }
     
+    [HttpPost("update-bedroom-state")]
+
     public async Task<IActionResult> UpdateBedroomState([FromBody] UpdateBedroomStateResource resource)
     {
         if (resource == null)

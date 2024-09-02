@@ -2,4 +2,5 @@
 
 namespace sweetmanager.API.Reports.Interfaces.REST.Resources;
 
-public record CreateReportResource(string Title, string Content, string Image, EReportType ReportType);
+public record CreateReportResource(string Title, string Content, IFormFile Image, string ReportType);
+

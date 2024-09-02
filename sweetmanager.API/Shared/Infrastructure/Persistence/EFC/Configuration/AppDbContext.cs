@@ -30,6 +30,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(builder);
 
         // Monitoring Context
+        builder.Entity<Report>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(c => c.Title).IsRequired();
+            entity.Property(c => c.Content).IsRequired();
+            entity.Property(c => c.Image);
+            entity.Property(c => c.ReportType).IsRequired().HasConversion<string>();
+        });
 
         builder.Entity<Bedroom>(entity =>
         {
@@ -150,15 +159,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Message).IsRequired();
         });
         
-        builder.Entity<Report>(entity =>
-        {
-            entity.HasKey(c => c.Id);
-            entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
-            entity.Property(c => c.Title).IsRequired();
-            entity.Property(c => c.Content).IsRequired();
-            entity.Property(c => c.Image);
-            entity.Property(c => c.ReportType).IsRequired().HasConversion<string>();
-        });
+        
 
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
         {

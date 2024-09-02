@@ -1,5 +1,7 @@
 ﻿using sweetmanager.API.Reports.Domain.Model.Aggregates;
 using sweetmanager.API.Reports.Domain.Model.Commands;
+using sweetmanager.API.Reports.Domain.Model.Exceptions;
+using sweetmanager.API.Reports.Domain.Model.ValueObjects;
 using sweetmanager.API.Reports.Domain.Repositories;
 using sweetmanager.API.Reports.Domain.Services;
 using sweetmanager.API.Shared.Domain.Repositories;
@@ -14,6 +16,15 @@ IUnitOfWork unitOfWork) : IReportCommandService
         try
         {
             var result = new Report(command);
+            
+            if (string.IsNullOrEmpty(command.Title))
+                throw new InvalidReportException("Title cannot be empty.");
+            
+            if (string.IsNullOrEmpty(command.Content))
+                throw new InvalidReportException("Content cannot be empty.");
+            
+            if (!Enum.IsDefined(typeof(EReportType), command.ReportType))
+                throw new InvalidReportException($"Invalid ReportType: {command.ReportType}");
             
             await reportRepository.AddAsync(result);
 
