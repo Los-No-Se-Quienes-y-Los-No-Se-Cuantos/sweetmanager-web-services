@@ -44,4 +44,9 @@ public class Booking
     {
         ClientId = command.ClientId;
     }
+    
+    public Booking(DeleteBookingCommand command)
+    {
+        Id = command.Id;
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
+using sweetmanager.API.Rooms.Domain.Model.Commands;
 using sweetmanager.API.Rooms.Domain.Model.Queries;
 using sweetmanager.API.Rooms.Domain.Services;
 using sweetmanager.API.Rooms.Interfaces.REST.Resources;
@@ -88,4 +89,72 @@ public class BookingsController(IBookingCommandService bookingCommandService,
             return BadRequest(ex.Message);
         }
     }
+    
+    [HttpGet("bedroom/{bedroomId:int}")]
+    public async Task<IActionResult> GetBookingsByBedroomId(int bedroomId)
+    {
+        try
+        {
+            var bookings = await bookingQueryService.Handle(new GetAllBookingsByBedroomIdQuery(bedroomId));
+
+            var bookingResources = bookings.Select(BookingResourceFromEntityAssembler.ToResourceFromEntity);
+
+            return Ok(bookingResources);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpGet("client/{clientId:int}")]
+    public async Task<IActionResult> GetBookingsByClientId(int clientId)
+    {
+        try
+        {
+            var bookings = await bookingQueryService.Handle(new GetAllBookingsByClientIdQuery(clientId));
+
+            var bookingResources = bookings.Select(BookingResourceFromEntityAssembler.ToResourceFromEntity);
+
+            return Ok(bookingResources);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpGet("date/{startDate:DateTime}")]
+    public async Task<IActionResult> GetBookingsByStartDate(DateTime startDate)
+    {
+        try
+        {
+            var bookings = await bookingQueryService.Handle(new GetAllBookingsByStartDateQuery(startDate));
+
+            var bookingResources = bookings.Select(BookingResourceFromEntityAssembler.ToResourceFromEntity);
+
+            return Ok(bookingResources);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("{bookingId:int}")]
+    public async Task<IActionResult> DeleteBooking(int bookingId)
+    {
+        
+        try
+        {
+            var booking = await bookingCommandService.Handle(DeleteBookingCommandFromResourceAssembler.ToCommandFromResource(new DeleteBookingResource(bookingId)));
+
+            return Ok("Deleted booking with id: " + booking.Id);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }
