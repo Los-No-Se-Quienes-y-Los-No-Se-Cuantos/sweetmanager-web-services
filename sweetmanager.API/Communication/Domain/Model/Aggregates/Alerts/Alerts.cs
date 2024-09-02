@@ -10,10 +10,10 @@ public partial class Alerts
     
     public string Description { get; private set; }
     
-    public Alerts(string title, string message)
+    public Alerts(string title, string description)
     {
         Title = title;
-        Description = message;
+        Description = description;
     }
     
     public Alerts(CreateAlertsCommand command)

@@ -13,7 +13,8 @@ namespace sweetmanager.API.Communication.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class NotificationController(INotificationCommandService notificationCommandService, INotificationQueryService notificationQueryService) : ControllerBase
+public class NotificationController(INotificationCommandService notificationCommandService, INotificationQueryService notificationQueryService,
+                                    IAlertsCommandService alertsCommandService,IAlertsQueryService alertsQueryService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateNotification(CreateNotificationResource resource)
@@ -36,6 +37,28 @@ public class NotificationController(INotificationCommandService notificationComm
         }
     }
 
+    [HttpPost("alerts")]
+    public async Task<IActionResult> CreateAlerts(CreateAlertsResource resource)
+    {
+        try
+        {
+            var createAlertsCommand = CreateAlertsCommandFromResourceAssembler.ToCommandFromResource(resource);
+            
+            var alerts = await alertsCommandService.Handle(createAlertsCommand);
+            
+            if (alerts == null) BadRequest("Could not create alert");
+            
+            var alertsResource = AlertsResourceFromEntityAssembler.ToResourceFromEntity(alerts);
+            
+            return Created(HttpContext.Request.Path, alertsResource);
+
+        }
+        catch (Exception e)
+        {
+           return BadRequest(e.Message);
+        }
+    }
+    
     [HttpGet]
     public async Task<IActionResult> GetAllNotifications()
     {
@@ -55,4 +78,25 @@ public class NotificationController(INotificationCommandService notificationComm
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("alerts")]
+    public async Task<IActionResult> GetAllAlerts()
+    {
+        try
+        {
+            var getAllAlertsQuery = new GetAllAlertsQuery();
+            
+            var alerts = await alertsQueryService.Handle(getAllAlertsQuery);
+            
+            var alertResources = alerts.Select(AlertsResourceFromEntityAssembler.ToResourceFromEntity);
+            
+            return Ok(alertResources);
+
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
 }

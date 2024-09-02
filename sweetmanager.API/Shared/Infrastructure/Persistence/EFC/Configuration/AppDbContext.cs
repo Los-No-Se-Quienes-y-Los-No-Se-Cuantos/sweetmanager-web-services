@@ -2,6 +2,7 @@ using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using sweetmanager.API.Clients.Domain.Model.Aggregates;
 using sweetmanager.API.Communication.Domain.Model.Aggregates;
+using sweetmanager.API.Communication.Domain.Model.Aggregates.Alerts;
 using sweetmanager.API.IAM.Domain.Model.Aggregates.Management;
 using sweetmanager.API.IAM.Domain.Model.Aggregates.Work;
 using sweetmanager.API.IAM.Domain.Model.Entities.Credential;
@@ -12,6 +13,7 @@ using sweetmanager.API.Payments.Domain.Model.Aggregates;
 using sweetmanager.API.Rooms.Domain.Model.Aggregates;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using sweetmanager.API.Subscriptions.Domain.Model.Aggregates;
+using Task = sweetmanager.API.Inspection.Domain.Model.Aggregates.Assignments.Task;
 
 namespace sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -146,6 +148,14 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Title).IsRequired();
             entity.Property(c => c.Message).IsRequired();
         });
+        
+      builder.Entity<Alerts>(entity =>
+      {
+          entity.HasKey(c => c.Id);
+          entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
+          entity.Property(c => c.Title).IsRequired();
+          entity.Property(c => c.Description).IsRequired();
+      });
 
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
         {
@@ -278,6 +288,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasOne(a => a.Admin).WithOne(wc => wc.AdministratorCredential)
                 .HasForeignKey<AdministratorCredential>(ac => ac.AdminId).OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_admin_credentials_admin_id");
+        });
+        
+        builder.Entity<Task>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
+            entity.Property(e => e.Title).IsRequired();
+            entity.Property(e => e.Description).IsRequired();
+            entity.Property(e => e.WorkerId).IsRequired();
         });
         
         // Apply SnakeCase Naming Convention

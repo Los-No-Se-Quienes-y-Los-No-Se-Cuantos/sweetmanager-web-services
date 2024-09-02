@@ -1,4 +1,4 @@
-using sweetmanager.API.Inspection.Domain.Repositories;
+using sweetmanager. API. Inspection. Domain. Model. Queries;
 
 namespace sweetmanager.API.Inspection.Domain.Services;
 

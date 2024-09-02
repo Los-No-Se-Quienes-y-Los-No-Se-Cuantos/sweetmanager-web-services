@@ -47,6 +47,11 @@ using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Configuration;
 using sweetmanager.API.IAM.Infrastructure.Tokens.JWT.Services;
 using sweetmanager.API.IAM.Interfaces.ACL;
 using sweetmanager.API.IAM.Interfaces.ACL.Services;
+using sweetmanager.API.Inspection.Application.CommandService;
+using sweetmanager.API.Inspection.Application.QueryService;
+using sweetmanager.API.Inspection.Domain.Repositories;
+using sweetmanager.API.Inspection.Domain.Services;
+using sweetmanager.API.Inspection.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Payments.Application.Internal.CommandService;
 using sweetmanager.API.Payments.Application.Internal.OutboundServices.ACL;
 using sweetmanager.API.Payments.Application.Internal.QueryService;
@@ -201,6 +206,16 @@ builder.Services.AddScoped<IClientCommandService, ClientCommandService>();
 builder.Services.AddScoped<IClientQueryService, ClientQueryService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientsContextFacade, ClientsContextFacade>();
+
+// Inspection Bounded Context Injection Configuration
+builder.Services.AddScoped<ITaskCommandService, TaskCommandService>();
+builder.Services.AddScoped<ITaskQueryService, TaskQueryService>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+// Communication Context Extension Injection Configuration
+builder.Services.AddScoped<IAlertsCommandService, AlertsCommandService>();
+builder.Services.AddScoped<IAlertsQueryService, AlertsQueryService>();
+builder.Services.AddScoped<IAlertsRepository, AlertsRepository>();
 
 // IAM Bounded Context Injection Configuration
 

@@ -1,7 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using sweetmanager.API.Inspection.Domain.Repositories;
+using sweetmanager. API. Inspection. Domain. Model. Queries;
 using sweetmanager.API.Inspection.Domain.Services;
 using sweetmanager.API.Inspection.Interfaces.REST.Resources;
 using sweetmanager.API.Inspection.Interfaces.REST.Transforms;
