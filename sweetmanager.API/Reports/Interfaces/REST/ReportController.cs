@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.Reports.Domain.Model.Commands;
 using sweetmanager.API.Reports.Domain.Model.Queries;
@@ -7,14 +6,14 @@ using sweetmanager.API.Reports.Domain.Services;
 using sweetmanager.API.Reports.Interfaces.REST.Resources;
 using sweetmanager.API.Reports.Interfaces.REST.Transform;
 
-using Firebase.Storage;
-using Firebase.Auth;
+
+using sweetmanager.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using sweetmanager.API.Reports.Domain.Model.Exceptions;
 
 
 namespace sweetmanager.API.Reports.Interfaces.REST;
 
-
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
@@ -72,28 +71,5 @@ public class ReportController : ControllerBase
         return Ok(ReportResourceFromEntityAssembler.ToResourceFromEntity(report));
     }
 
-    [HttpPost("subir-storage")]
-    public async Task<string> SubirStorage(Stream archivo, string nombre)
-    {
-        string email = "losnosequeylosnosecomo@gmail.com"; 
-        string password = "codigo123";
-        string path = "imagesfirebase-38e3b.appspot.com";
-        string apiKey = "AIzaSyC1X7tTKHyeZsZtM8Mv5IUryUs18KHNQQM";
-
-        var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        var a = await auth.SignInWithEmailAndPasswordAsync(email, password);
-        
-        var cancellation = new CancellationTokenSource();
-
-        var task = new FirebaseStorage(path, new FirebaseStorageOptions
-            {
-                AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                ThrowOnCancel = true
-            }).Child("path")
-            .Child(nombre)
-            .PutAsync(archivo, cancellation.Token); 
-        
-        var downloadUrl = await task;
-        return downloadUrl;
-    }
+ 
 }
