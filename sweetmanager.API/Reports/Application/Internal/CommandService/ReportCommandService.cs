@@ -24,7 +24,8 @@ IUnitOfWork unitOfWork) : IReportCommandService
                 throw new InvalidReportException("Content cannot be empty.");
             
             if (!Enum.IsDefined(typeof(EReportType), command.ReportType))
-                throw new InvalidReportException($"Invalid ReportType: {command.ReportType}");
+                throw new InvalidReportException("Invalid ReportType.");
+
             
             await reportRepository.AddAsync(result);
 
@@ -46,6 +47,16 @@ IUnitOfWork unitOfWork) : IReportCommandService
 
             if (result == null)
                 throw new Exception($"Report with id {command.Id} not found");
+            
+            if (string.IsNullOrEmpty(command.Title))
+                throw new InvalidReportException("Title cannot be empty.");
+            
+            if (string.IsNullOrEmpty(command.Content))
+                throw new InvalidReportException("Content cannot be empty.");
+            
+            if (!Enum.IsDefined(typeof(EReportType), command.ReportType))
+                throw new InvalidReportException("Invalid ReportType.");
+
 
             result.Update(command);
 
