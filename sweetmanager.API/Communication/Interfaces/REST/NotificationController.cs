@@ -46,9 +46,9 @@ public class NotificationController(INotificationCommandService notificationComm
             
             var alerts = await alertsCommandService.Handle(createAlertsCommand);
             
-            if (alerts == null) BadRequest("Could not create alert");
+            if (alerts is null) BadRequest("Could not create alert");
             
-            var alertsResource = AlertsResourceFromEntityAssembler.ToResourceFromEntity(alerts);
+            var alertsResource = AlertsResourceFromEntityAssembler.ToResourceFromEntity(alerts!);
             
             return Created(HttpContext.Request.Path, alertsResource);
 
