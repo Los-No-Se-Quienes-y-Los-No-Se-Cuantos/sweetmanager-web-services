@@ -7,4 +7,5 @@ public interface IBookingCommandService
 {
     Task<Booking> Handle(CreateBookingCommand command);
     Task<Booking> Handle(UpdateBookingCommand command);
+    Task<Booking> Handle(DeleteBookingCommand command);
 }

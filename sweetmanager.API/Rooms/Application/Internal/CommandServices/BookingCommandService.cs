@@ -43,4 +43,23 @@ public class BookingCommandService(IBookingRepository bookingRepository,
             return new();
         }
     }
+    
+    public async Task<Booking> Handle(DeleteBookingCommand command)
+    {
+        try
+        {
+            var result = await bookingRepository.FindByIdAsync(command.Id);
+
+            if (result != null)
+                bookingRepository.Remove(result);
+
+            await unitOfWork.CompleteAsync();
+
+            return new(command);
+        }
+        catch (Exception)
+        {
+            return new();
+        }
+    }
 }
