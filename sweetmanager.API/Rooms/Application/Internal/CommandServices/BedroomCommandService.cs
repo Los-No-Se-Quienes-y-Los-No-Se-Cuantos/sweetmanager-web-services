@@ -50,4 +50,27 @@ public class BedroomCommandService(
             return null;
         }
     }
+    
+    public async Task<Bedroom?> Handle(UpdateBedroomStateCommand command)
+    {
+        try
+        {
+            var result = await bedroomRepository.FindByIdAsync(command.Id);
+
+            if (result == null)
+                throw new Exception($"Bedroom with id {command.Id} not found");
+
+            result.UpdateState(command.BedroomState);
+            
+            bedroomRepository.Update(result);
+
+            await unitOfWork.CompleteAsync();
+
+            return result;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 }
