@@ -1,8 +1,6 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using sweetmanager.API.IAM.Domain.Model.ValueObjects;
-using sweetmanager.API.IAM.Domain.Services;
-using sweetmanager.API.IAM.Domain.Services.UserCredentials;
 using sweetmanager.API.IAM.Domain.Services.UserCredentials.Administration;
 using sweetmanager.API.IAM.Domain.Services.UserCredentials.Work;
 using sweetmanager.API.IAM.Domain.Services.Users.Administration;
