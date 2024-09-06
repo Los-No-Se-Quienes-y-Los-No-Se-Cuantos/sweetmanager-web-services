@@ -38,6 +38,5 @@ public class WorkerRoleRepository(AppDbContext context) : BaseRepository<WorkerR
             select wr.Id
             ).FirstOrDefault());
     
-    
     // await Context.Set<WorkerRole>().Where(wr => supervisionAreas.Contains(wr.Role.ToString())).ToListAsync();
 }
