@@ -161,7 +161,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(c => c.Message).IsRequired();
         });
         
-inspection
       builder.Entity<Alerts>(entity =>
       {
           entity.HasKey(c => c.Id);
@@ -169,7 +168,6 @@ inspection
           entity.Property(c => c.Title).IsRequired();
           entity.Property(c => c.Description).IsRequired();
       });
-develop
 
         builder.Entity<Supply.Domain.Model.Aggregates.Supply>(entity =>
         {
