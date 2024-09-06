@@ -2,4 +2,4 @@
 
 public record UpdateBedroomResource(int Id, string Name, int TotalBed,
     int TotalBathroom, int TotalTelevision, string State,
-    string Description, string Worker, string Client, decimal Price);
+    string Description, string Worker, string Client, decimal Price, string BedroomState);

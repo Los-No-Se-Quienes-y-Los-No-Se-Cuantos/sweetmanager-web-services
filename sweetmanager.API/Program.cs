@@ -58,6 +58,13 @@ using sweetmanager.API.Payments.Application.Internal.QueryService;
 using sweetmanager.API.Payments.Domain.Repositories;
 using sweetmanager.API.Payments.Domain.Services;
 using sweetmanager.API.Payments.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Reports.Application.Internal;
+using sweetmanager.API.Reports.Application.Internal.CommandService;
+using sweetmanager.API.Reports.Application.Internal.QueryService;
+using sweetmanager.API.Reports.Domain.Repositories;
+using sweetmanager.API.Reports.Domain.Services;
+using sweetmanager.API.Reports.Infrastructure.Persistence.EFC;
+using sweetmanager.API.Reports.Infrastructure.Persistence.EFC.Repositories;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -173,6 +180,15 @@ builder.Services.AddScoped<IBedroomQueryService, BedroomQueryService>();
 builder.Services.AddScoped<IBookingQueryService, BookingQueryService>();
 builder.Services.AddScoped<IBedroomRepository, BedroomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
+builder.Services.AddScoped<IReportCommandService, ReportCommandService>();
+
+builder.Services.AddSingleton<FirebaseClient>();
+builder.Services.AddScoped<IFirebaseService, FirebaseService>();
+
+
 
 // Supply Bounded Context Injection Configuration
 builder.Services.AddScoped<ISupplyCommandService, SupplyCommandService>();
