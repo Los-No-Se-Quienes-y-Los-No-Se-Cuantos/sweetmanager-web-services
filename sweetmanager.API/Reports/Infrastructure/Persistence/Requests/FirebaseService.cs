@@ -1,9 +1,10 @@
 ﻿using Firebase.Auth;
 using Firebase.Storage;
+using sweetmanager.API.Reports.Domain.Services;
 
-namespace sweetmanager.API.Reports.Infrastructure.Persistence.EFC;
+namespace sweetmanager.API.Reports.Infrastructure.Persistence.EFC.Requests;
 
-public class FirebaseClient
+public class FirebaseService : IFirebaseService
 {
     readonly string email = "losnosequeylosnosecomo@gmail.com";
     readonly string password = "codigo123";

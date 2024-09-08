@@ -65,6 +65,7 @@ using sweetmanager.API.Reports.Domain.Repositories;
 using sweetmanager.API.Reports.Domain.Services;
 using sweetmanager.API.Reports.Infrastructure.Persistence.EFC;
 using sweetmanager.API.Reports.Infrastructure.Persistence.EFC.Repositories;
+using sweetmanager.API.Reports.Infrastructure.Persistence.EFC.Requests;
 using sweetmanager.API.Shared.Domain.Repositories;
 using sweetmanager.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using sweetmanager.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -185,7 +186,7 @@ builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
 builder.Services.AddScoped<IReportCommandService, ReportCommandService>();
 
-builder.Services.AddSingleton<FirebaseClient>();
+
 builder.Services.AddScoped<IFirebaseService, FirebaseService>();
 
 

@@ -4,13 +4,22 @@ using sweetmanager.API.Reports.Domain.Model.Exceptions;
 using sweetmanager.API.Reports.Domain.Model.ValueObjects;
 using sweetmanager.API.Reports.Domain.Repositories;
 using sweetmanager.API.Reports.Domain.Services;
+using sweetmanager.API.Reports.Infrastructure.Persistence.EFC;
+using sweetmanager.API.Reports.Infrastructure.Persistence.EFC.Requests;
 using sweetmanager.API.Shared.Domain.Repositories;
 
 namespace sweetmanager.API.Reports.Application.Internal.CommandService;
 
 public class ReportCommandService(IReportRepository reportRepository,
-IUnitOfWork unitOfWork) : IReportCommandService
+IUnitOfWork unitOfWork,
+IFirebaseService firebaseService) : IReportCommandService
 {
+  
+    public async Task<string> UploadFileAsync(Stream fileStream, string fileName)
+    {
+        return await firebaseService.UploadFileAsync(fileStream, fileName);
+    }
+    
     public async Task<Report?> Handle(CreateReportCommand command)
     {
         try
@@ -94,4 +103,6 @@ IUnitOfWork unitOfWork) : IReportCommandService
             return null;
         }
     }
+    
+    
 }

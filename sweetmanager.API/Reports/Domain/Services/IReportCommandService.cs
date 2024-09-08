@@ -10,4 +10,6 @@ public interface IReportCommandService
     Task<Report?> Handle(UpdateReportCommand command);
     
     Task<Report?> Handle(DeleteReportCommand command);
+
+    Task<string> UploadFileAsync(Stream fileStream, string fileName);
 }

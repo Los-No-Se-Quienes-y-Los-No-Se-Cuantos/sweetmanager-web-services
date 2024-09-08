@@ -21,20 +21,19 @@ public class ReportController : ControllerBase
 {
     IReportCommandService _reportCommandService;
     IReportQueryService _reportQueryService;
-     IFirebaseService _firebaseService;
+
     
     public ReportController(IReportCommandService reportCommandService, IReportQueryService reportQueryService, IFirebaseService firebaseService)
     {
         _reportCommandService = reportCommandService;
         _reportQueryService = reportQueryService;
-        _firebaseService = firebaseService;
     }
     
     [HttpPost]
     public async Task<IActionResult> CreateReport([FromForm] CreateReportResource resource)
     {
         var imageStream = resource.Image.OpenReadStream();
-        string imageUrl = await _firebaseService.UploadFileAsync(imageStream, resource.Image.FileName);
+        string imageUrl = await _reportCommandService.UploadFileAsync(imageStream, resource.Image.FileName);
 
         var reportCommand = CreateReportCommandFromResourceAssembler.ToCommandFromResource(resource, imageUrl);
 

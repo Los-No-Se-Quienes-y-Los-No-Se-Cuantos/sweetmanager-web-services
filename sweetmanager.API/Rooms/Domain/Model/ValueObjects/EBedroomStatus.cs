@@ -3,5 +3,11 @@
 public enum EBedroomStatus
 {
     Busy,
-    NotBusy
+    NotBusy, 
+    NeedsAttention,
+    OutofService,
+    Dirty,
+    Cleaned,
+    NeedsCleaning,
+    Inspection
 }
